@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My Crypto Invest</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"><!-- esta linea enlaza a la carpeta static/css para que el navegador muestre los resultados con estilos y no solo un json-->
+    <link rel="stylesheet" href="/static/css/bulma.css"><!-- esta linea enlaza a la carpeta static/css para que el navegador muestre los resultados con estilos y no solo un json-->
     <script src="/static/js/spa_crypto.js"></script> <!-- Esta linea sirve para que el navegador enlace al archivo spa.js que es donde se va a crear el template que va a mostrar la pagina-->
 </head>
     <body>
@@ -16,12 +16,12 @@
                 <table is-striped is-hoverable class="table" name="tabla-movimientos" id="tabla-movimientos">
                     <thead>
                         <tr is-selected>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>From</th>
-                            <th>Cantidad inicial</th>
-                            <th>To</th>
-                            <th>Cantidad resultante</th>
+                            <th>fecha</th>
+                            <th>hora</th>
+                            <th>moneda_from</th>
+                            <th>cantidad_inicial</th>
+                            <th>moneda_to</th>
+                            <th>cantidad_resultante</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -33,20 +33,12 @@
             <form>
                 <div class="row">
                     <input type="hidden" id="idMovimiento">
-                    <div class="column">
-                        <label for="fecha">Fecha</label>
-                        <input type="date" name="fecha" id="fecha">
-                    </div>
-                    <div class="column">
-                        <label for="hora">Hora</label>
-                        <input type="text" name="hora" id="hora">
-                    </div>
                 </div>
                 
                 <div class="row">
                     <div class="column">
-                        <label for="from">From</label>
-                        <select name="from" id="from">
+                        <label for="moneda_from">From</label>
+                        <select name="moneda_from" id="moneda_from">
                             <option value="EUR">Euro</option>
                             <option value="BTC">Bitcoin</option>
                             <option value="ETH">Ethereum</option>
@@ -71,8 +63,8 @@
                     </div>
                     
                     <div class="column">
-                        <label for="to">To</label>
-                        <select name="to" id="to">
+                        <label for="moneda_to">To</label>
+                        <select name="moneda_to" id="moneda_to">
                             <option value="EUR">Euro</option>
                             <option value="BTC">Bitcoin</option>
                             <option value="ETH">Ethereum</option>
@@ -115,7 +107,7 @@
                     
                         <button class="button is-success is-hovered is-focused" id="comprar" >Comprar</button>
                            
-                        <button class="button is-danger is-hovered is-focused" id="cancelar" >Cancelar</button>
+                        <a class="button is-danger is-hovered is-focused" id="cancelar" >Cancelar</a>
                     </div>
                 </div>
             </form>

@@ -6,9 +6,11 @@ from http import HTTPStatus
 
 dbManager = DBmanager(app.config.get('DATABASE'))
 
+
+
 @app.route("/")
 def listaMovimientos():
-    return render_template('spa.html')
+    return render_template('spa_crypto.html')
 
 
 @app.route('/api/v1/movimientos')
@@ -40,8 +42,8 @@ def muestraMovimientoId(id=None):
         if request.method == 'POST':
             dbManager.modificaTablaSQL("""
             INSERT INTO movimientos_crypto 
-                (fecha, hora, from, cantidad_inicial, to, cantidad_resultante) 
-            VALUES (:fecha, :hora, :from, :cantidad_inicial, :to, :cantidad_resultante)
+                (fecha, hora, moneda_from, cantidad_inicial, moneda_to, cantidad_resultante) 
+            VALUES (:fecha, :hora, :moneda_from, :cantidad_inicial, :moneda_to, :cantidad_resultante)
             """, request.json) #Aqui en este modificaTablaSQL creo primero las columnas de las campos donde van a ir los datos y luego le meto los valores a cada uno de los campos, los valores, que se han introducido en el formulario de detalle de movimientos en el navegador y lo envio con el metodo request en forma de json al servidor
     
             return jsonify({"status":"success", "mensaje": "Registro creado con éxito"}), HTTPStatus.CREATED

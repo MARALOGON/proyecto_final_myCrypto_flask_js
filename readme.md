@@ -19,6 +19,17 @@ Los valores deben ser:
 
 7. Crear base de datos con DBBrowser. Crear carpeta "data" en el fichero raiz y guardar dentro el archivo .db generado con la creacion de la base de datos.
 
+CREATE TABLE "movimientos_crypto" (
+	"id"	INTEGER,
+	"fecha"	TEXT NOT NULL,
+	"hora"	TEXT NOT NULL,
+	"moneda_from"	TEXT NOT NULL,
+	"cantidad_inicial"	REAL NOT NULL,
+	"moneda_to"	TEXT NOT NULL,
+	"cantidad_resultante"	REAL NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+
 8. Ejecutar flask run
 
 
