@@ -18,7 +18,7 @@ def movimientosAPI():
     query = "SELECT * FROM movimientos_crypto ORDER BY fecha"
    
     try:
-        lista = dbManager.consultaMuchasSQL(query) #Aqui va a devolver una lista, si no hay nada la devulve vacia, es una lista de diccionarios. Est ya seria el json 
+        lista = dbManager.consultaMuchasSQL(query) 
         return jsonify({'status': 'success', 'movimientos_crypto':lista})
 
     except sqlite3.Error as e:
@@ -36,7 +36,7 @@ def muestraMovimientoId(id=None):
                     "data": movimiento
                 })
             else:
-                return jsonify({"status": "fail", "mensaje": "movimiento no encomtrado"}), 404 #Cuando creamos una api, Es importante poner el codigo 404 o en su defecto el HTTPStatus.NOT_FOUND si importamos previamente la libreria http y el modulo HTTPStatus cuando la petición no se encuentra 
+                return jsonify({"status": "fail", "mensaje": "movimiento no encomtrado"}), 404 
     
 
         if request.method == 'POST':
@@ -44,7 +44,7 @@ def muestraMovimientoId(id=None):
             INSERT INTO movimientos_crypto 
                 (fecha, hora, moneda_from, cantidad_inicial, moneda_to, cantidad_resultante) 
             VALUES (:fecha, :hora, :moneda_from, :cantidad_inicial, :moneda_to, :cantidad_resultante)
-            """, request.json) #Aqui en este modificaTablaSQL creo primero las columnas de las campos donde van a ir los datos y luego le meto los valores a cada uno de los campos, los valores, que se han introducido en el formulario de detalle de movimientos en el navegador y lo envio con el metodo request en forma de json al servidor
+            """, request.json) 
     
             return jsonify({"status":"success", "mensaje": "Registro creado con éxito"}), HTTPStatus.CREATED
     
