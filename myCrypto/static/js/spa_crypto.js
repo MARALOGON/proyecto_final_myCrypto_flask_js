@@ -22,7 +22,7 @@ const criptomonedas = {
 
 }
 
-//let losMovimientos  
+const losMovimientos = {}
 
 
 
@@ -85,46 +85,59 @@ function capturaFormMovimiento() {
 }
 
 function llamaApiPrecios(ev) {
-    document.querySelector("#convertir")
-    .addEventListener("click", (ev) => {
     ev.preventDefault()
 
     const llamada = {}
     llamada.moneda_from = document.querySelector("#moneda_from").value
     llamada.cantidad_inicial = document.querySelector("#cantidad_inicial").value
     llamada.moneda_to = document.querySelector("#moneda_to").value
+    //llamada.cantidad_resultante = document.querySelector("#cantidad_resultante").value
 
     xhr2 = new XMLHttpRequest()
     
-    xhr2.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${llamada.cantidad_inicial}&symbol=${llamada.moneda_from}}&convert=${llamada.moneda_to}&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
-    xhr2.onload = llamaApiMuestraConversion
+    xhr2.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${llamada.cantidad_inicial}&symbol=${llamada.moneda_from}&convert=${llamada.moneda_to}&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
+
+    xhr2.onload = RecibeApiConversion
+    xhr2.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
     xhr2.send()
     
-    return llamada 
+    console.log("petición lanzada")
 
-    })
 }
 
-/*function llamaApiMuestraConversion() {
-    if (this.readyState === 4 && (this.status === 200 || this.status === 201)) {
+
+function RecibeApiConversion() {
+    if (this.readyState === 4 && this.status === 200) {
         const conversion = JSON.parse(this.responseText)
 
-        if (conversion.status !== "success") {
+        if (conversion.Response === 'False') {
             alert("Se ha producido un error en la llamada" + respuesta.mensaje)
             return
         }
 
-        laConversion = conversion.movimientos_crypto
-        const tbody = document.querySelector(".table tbody")
-        return conversion.data.quote[moneda_to].price
+        const movimiento = {}
+        
+       
+        movimiento.moneda_to = document.querySelector("#moneda_to").value
+       
+        
+        const cantidad_resultante = conversion.data.quote[movimiento.moneda_to].price
+       
 
+        
+        //const tbody = document.querySelector(".table tbody")
 
+        
+
+    }
 }
-*/
+
+
 window.onload = function() { 
     llamaApiMovimientos() 
 
-    //llamaApiPrecios()
+    document.querySelector("#convertir")
+    addEventListener("click", llamaApiPrecios)
 
 
 

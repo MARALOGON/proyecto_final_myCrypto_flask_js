@@ -60,6 +60,8 @@
                             <option value="LINK">Chainlink</option>
                             <option value="MATIC">Polygon</option>
                         </select>
+                        <label for="cantidad_inicial">Cantidad inicial</label>
+                        <input type="number" name="cantidad_inicial" id="cantidad_inicial"> 
                     </div>
                     
                     <div class="column">
@@ -86,28 +88,19 @@
                             <option value="LINK">Chainlink</option>
                             <option value="MATIC">Polygon</option>
                         </select>
-                    </div>
-
-                <div class="row">                        
-                    <div class="column">
-                        <label for="cantidad_inicial">Cantidad inicial</label>
-                        <input type="number" name="cantidad_inicial" id="cantidad_inicial"> 
-                    </div>
-
-
-                    <div class="column">
                         <label for="cantidad_resultante">Cantidad resultante</label>
                         <input type="number" name="cantidad_resultante" id="cantidad_resultante" step="any">
                     </div>
-                </div>
+
             
                 <div class="row">
                     <div class="column">
-                        <button class="button is-info is-hovered is-focused" id="convertir">Convertir</button>
+                        <a href="https://pro-api.coinmarketcap.com/v1/tools/price-conversion?
+                        amount=1&symbol=<From>&convert=<To>&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02" class="button is-info is-hovered is-focused" id="convertir">Convertir</a href>
                     
                         <button class="button is-success is-hovered is-focused" id="comprar" >Comprar</button>
                            
-                        <a class="button is-danger is-hovered is-focused" id="cancelar" >Cancelar</a>
+                        <button class="button is-danger is-hovered is-focused" id="cancelar" >Cancelar</button>
                     </div>
                 </div>
             </form>
@@ -115,3 +108,4 @@
     <footer>Original creation. Open source. &copy 2021</footer>
     </body>
 </html>
+
