@@ -89,12 +89,12 @@ function llamaApiPrecios(ev) {
     
 
     const llamada = {}
-    moneda_from = document.querySelector("#moneda_from").value
-    cantidad_inicial = document.querySelector("#cantidad_inicial").value
-    moneda_to = document.querySelector("#moneda_to").value
+    llamada.moneda_from = document.querySelector("#moneda_from").value
+    llamada.cantidad_inicial = document.querySelector("#cantidad_inicial").value
+    llamada.moneda_to = document.querySelector("#moneda_to").value
     //llamada.cantidad_resultante = document.querySelector("#cantidad_resultante").value
 
-    const xhr2 = new XMLHttpRequest()
+    xhr2 = new XMLHttpRequest()
     xhr2.onload = RecibeApiConversion
     
     
@@ -121,7 +121,7 @@ function RecibeApiConversion() {
         const movimiento = {}
         
        
-        moneda_to = document.querySelector("#moneda_to").value
+        movimiento.moneda_to = document.querySelector("#moneda_to").value
         cantidad_resultante = conversion.data.quote[movimiento.moneda_to].price
         document.getElementById('cantidad_resultante').value=cantidad_resultante
 
@@ -138,7 +138,7 @@ window.onload = function() {
     llamaApiMovimientos() 
 
     document.querySelector("#convertir")
-    addEventListener("click", llamaApiPrecios)
+        .addEventListener("click", llamaApiPrecios)
 
     //document.querySelector("#comprar")
     //addEventListener("click", llamaApiPrecios)
