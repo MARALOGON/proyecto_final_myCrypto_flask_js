@@ -8,104 +8,103 @@
     <link rel="stylesheet" href="/static/css/bulma.css"><!-- esta linea enlaza a la carpeta static/css para que el navegador muestre los resultados con estilos y no solo un json-->
     <script src="/static/js/spa_crypto.js"></script> <!-- Esta linea sirve para que el navegador enlace al archivo spa.js que es donde se va a crear el template que va a mostrar la pagina-->
 </head>
-    <body>
-        <header>My Crypto Invest App</header>
-        <section class="container" id="principal">
-            <h3 class="title is-3">Registro de movimientos</h3>
-            <div class="lista-movimientos">
-                <table is-striped is-hoverable class="table" name="tabla-movimientos" id="tabla-movimientos">
-                    <thead>
-                        <tr is-selected>
-                            <th>fecha</th>
-                            <th>hora</th>
-                            <th>moneda_from</th>
-                            <th>cantidad_inicial</th>
-                            <th>moneda_to</th>
-                            <th>cantidad_resultante</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+<body>
+    <header>My Crypto Invest App</header>
+    <section class="container" id="principal">
+        <h3 class="title is-3">Registro de movimientos</h3>
+        <div class="lista-movimientos">
+            <table is-striped is-hoverable class="table" name="tabla-movimientos" id="tabla-movimientos">
+                <thead>
+                    <tr is-selected>
+                        <th>fecha</th>
+                        <th>hora</th>
+                        <th>moneda_from</th>
+                        <th>cantidad_inicial</th>
+                        <th>moneda_to</th>
+                        <th>cantidad_resultante</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section> 
+    <hr>
+    <div class="detail-movimiento container">
+        <form>
+            <div class="row">
+                <input type="hidden" id="idMovimiento">
             </div>
-        </section> 
-        <hr>
-        <div class="detail-movimiento container">
-            <form>
-                <div class="row">
-                    <input type="hidden" id="idMovimiento">
+            
+            <div class="row">
+                <div class="column">
+                    <label for="moneda_from">From</label>
+                    <select name="moneda_from" id="moneda_from">
+                        <option value="EUR">Euro</option>
+                        <option value="BTC">Bitcoin</option>
+                        <option value="ETH">Ethereum</option>
+                        <option value="LTC">Litecoin</option>
+                        <option value="XRP">Ripple</option>
+                        <option value="BCH">Bitcoin Cash</option>
+                        <option value="BNB">Binance Coin</option>
+                        <option value="USDT">Tether</option>
+                        <option value="EOS">Eos</option>
+                        <option value="BSV">Bitcoin SV</option>
+                        <option value="XLM">Stellar</option>
+                        <option value="ADA">Cardano</option>
+                        <option value="TRX">Tron</option>
+                        <option value="EGLD">Elrond</option>
+                        <option value="SOL">Solana</option>
+                        <option value="XOR">Sora</option>
+                        <option value="DOT">Polkadot</option>
+                        <option value="ORN">Orion Protocol</option>
+                        <option value="LINK">Chainlink</option>
+                        <option value="MATIC">Polygon</option>
+                    </select>
+                    <label for="cantidad_inicial">Cantidad inicial</label>
+                    <input type="number" name="cantidad_inicial" id="cantidad_inicial"> 
                 </div>
                 
-                <div class="row">
-                    <div class="column">
-                        <label for="moneda_from">From</label>
-                        <select name="moneda_from" id="moneda_from">
-                            <option value="EUR">Euro</option>
-                            <option value="BTC">Bitcoin</option>
-                            <option value="ETH">Ethereum</option>
-                            <option value="LTC">Litecoin</option>
-                            <option value="XRP">Ripple</option>
-                            <option value="BCH">Bitcoin Cash</option>
-                            <option value="BNB">Binance Coin</option>
-                            <option value="USDT">Tether</option>
-                            <option value="EOS">Eos</option>
-                            <option value="BSV">Bitcoin SV</option>
-                            <option value="XLM">Stellar</option>
-                            <option value="ADA">Cardano</option>
-                            <option value="TRX">Tron</option>
-                            <option value="EGLD">Elrond</option>
-                            <option value="SOL">Solana</option>
-                            <option value="XOR">Sora</option>
-                            <option value="DOT">Polkadot</option>
-                            <option value="ORN">Orion Protocol</option>
-                            <option value="LINK">Chainlink</option>
-                            <option value="MATIC">Polygon</option>
-                        </select>
-                        <label for="cantidad_inicial">Cantidad inicial</label>
-                        <input type="number" name="cantidad_inicial" id="cantidad_inicial"> 
-                    </div>
-                    
-                    <div class="column">
-                        <label for="moneda_to">To</label>
-                        <select name="moneda_to" id="moneda_to">
-                            <option value="EUR">Euro</option>
-                            <option value="BTC">Bitcoin</option>
-                            <option value="ETH">Ethereum</option>
-                            <option value="LTC">Litecoin</option>
-                            <option value="XRP">Ripple</option>
-                            <option value="BCH">Bitcoin Cash</option>
-                            <option value="BNB">Binance Coin</option>
-                            <option value="USDT">Tether</option>
-                            <option value="EOS">Eos</option>
-                            <option value="BSV">Bitcoin SV</option>
-                            <option value="XLM">Stellar</option>
-                            <option value="ADA">Cardano</option>
-                            <option value="TRX">Tron</option>
-                            <option value="EGLD">Elrond</option>
-                            <option value="SOL">Solana</option>
-                            <option value="XOR">Sora</option>
-                            <option value="DOT">Polkadot</option>
-                            <option value="ORN">Orion Protocol</option>
-                            <option value="LINK">Chainlink</option>
-                            <option value="MATIC">Polygon</option>
-                        </select>
-                        <label for="cantidad_resultante">Cantidad resultante</label>
-                        <input type="number" name="cantidad_resultante" id="cantidad_resultante" step="any">
-                    </div>
-
-            
-                <div class="row">
-                    <div class="column">
-                        <a href="https://pro-api.coinmarketcap.com/v1/tools/price-conversion?
-                        amount=1&symbol=<From>&convert=<To>&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02" class="button is-info is-hovered is-focused" id="convertir">Convertir</a href>
-                    
-                        <button class="button is-success is-hovered is-focused" id="comprar" >Comprar</button>
-                           
-                        <button class="button is-danger is-hovered is-focused" id="cancelar" >Cancelar</button>
-                    </div>
+                <div class="column">
+                    <label for="moneda_to">To</label>
+                    <select name="moneda_to" id="moneda_to">
+                        <option value="EUR">Euro</option>
+                        <option value="BTC">Bitcoin</option>
+                        <option value="ETH">Ethereum</option>
+                        <option value="LTC">Litecoin</option>
+                        <option value="XRP">Ripple</option>
+                        <option value="BCH">Bitcoin Cash</option>
+                        <option value="BNB">Binance Coin</option>
+                        <option value="USDT">Tether</option>
+                        <option value="EOS">Eos</option>
+                        <option value="BSV">Bitcoin SV</option>
+                        <option value="XLM">Stellar</option>
+                        <option value="ADA">Cardano</option>
+                        <option value="TRX">Tron</option>
+                        <option value="EGLD">Elrond</option>
+                        <option value="SOL">Solana</option>
+                        <option value="XOR">Sora</option>
+                        <option value="DOT">Polkadot</option>
+                        <option value="ORN">Orion Protocol</option>
+                        <option value="LINK">Chainlink</option>
+                        <option value="MATIC">Polygon</option>
+                    </select>
+                    <label for="cantidad_resultante">Cantidad resultante</label>
+                    <input type="number" name="cantidad_resultante" id="cantidad_resultante" step="any">
                 </div>
-            </form>
-        </div>
-    <footer>Original creation. Open source. &copy 2021</footer>
-    </body>
+
+        
+            <div class="row">
+                <div class="column">
+                    <button class="button is-info is-hovered is-focused" id="convertir">Convertir</button>
+                
+                    <button class="button is-success is-hovered is-focused" id="comprar" >Comprar</button>
+                        
+                    <button class="button is-danger is-hovered is-focused" id="cancelar" >Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+<footer>Original creation. Open source. &copy 2021</footer>
+</body>
 </html>
 

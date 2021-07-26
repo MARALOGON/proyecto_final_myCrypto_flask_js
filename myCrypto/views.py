@@ -1,6 +1,7 @@
 from myCrypto import app
 from myCrypto.dataccess import DBmanager
-from flask import jsonify, render_template, request
+from flask import jsonify, render_template, request, Response
+import requests
 import sqlite3
 from http import HTTPStatus    
 
@@ -53,11 +54,10 @@ def muestraMovimientoId(id=None):
         return jsonify({"status":"fail", "mensaje": "Error en base de datos: {}".format(e)}), HTTPStatus.BAD_REQUEST
 
 
-'''
+
 @app.route('/api/v1/par/<_from>/<_to>/<quantity>')
 @app.route('/api/v1/par/<_from>/<_to>')
 def par(_from, _to, quantity = 1.0):
     url = f"https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount={quantity}&symbol={_from}&convert={_to}&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02"
     res = requests.get(url)
     return Response(res)
-'''   
