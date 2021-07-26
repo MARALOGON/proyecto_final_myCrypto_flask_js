@@ -88,29 +88,24 @@ function llamaApiPrecios(ev) {
     ev.preventDefault()
     
 
-    
+    const llamada = {}
+    moneda_from = document.querySelector("#moneda_from").value
+    cantidad_inicial = document.querySelector("#cantidad_inicial").value
+    moneda_to = document.querySelector("#moneda_to").value
     //llamada.cantidad_resultante = document.querySelector("#cantidad_resultante").value
 
     const xhr2 = new XMLHttpRequest()
     xhr2.onload = RecibeApiConversion
     
-    document.querySelector("#convertir")
-    addEventListener("click", () => {
-        const llamada = {}
-        moneda_from = document.querySelector("#moneda_from").value
-        cantidad_inicial = document.querySelector("#cantidad_inicial").value
-        moneda_to = document.querySelector("#moneda_to").value
-        
-        xhr2.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${llamada.cantidad_inicial}&symbol=${llamada.moneda_from}&convert=${llamada.moneda_to}&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
-        xhr2.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
-        xhr2.send()
-        
-        console.log("petición lanzada")
-    })
     
+    xhr2.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${llamada.cantidad_inicial}&symbol=${llamada.moneda_from}&convert=${llamada.moneda_to}&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
 
-    
-    
+   
+    xhr2.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+    xhr2.send()
+        
+    console.log("petición lanzada")
+
 }
 
 
@@ -142,8 +137,8 @@ function RecibeApiConversion() {
 window.onload = function() { 
     llamaApiMovimientos() 
 
-    //document.querySelector("#convertir")
-    //addEventListener("click", llamaApiPrecios)
+    document.querySelector("#convertir")
+    addEventListener("click", llamaApiPrecios)
 
     //document.querySelector("#comprar")
     //addEventListener("click", llamaApiPrecios)
