@@ -1,18 +1,34 @@
+import datetime
 from myCrypto import app
 from myCrypto.dataccess import DBmanager
 from flask import jsonify, render_template, request, Response
 import requests
 import sqlite3
-from http import HTTPStatus    
+from http import HTTPStatus  
+
+
+
 
 dbManager = DBmanager(app.config.get('DATABASE'))
 
 
 
+
 @app.route("/")
 def listaMovimientos():
+    
     return render_template('spa_crypto.html')
 
+@app.route('/api/v1/saldos')
+def saldosCrypto():
+    query = "SELECT moneda_to SUM (cantidad_inicial) FROM movimientos_crypto GROUP BY moneda_to"
+
+    try:
+        saldos = dbManager.consultaMuchasSQL(query)
+        return jsonify({'status': 'success', 'movimientos_crypto':saldos})
+
+    except sqlite3.Error as e:
+        return jsonify({'status': 'fail', 'mensaje': str(e)})
 
 @app.route('/api/v1/movimientos')
 def movimientosAPI():
@@ -47,11 +63,12 @@ def muestraMovimientoId(id=None):
             VALUES (:fecha, :hora, :moneda_from, :cantidad_inicial, :moneda_to, :cantidad_resultante)
             """, request.json) 
     
-            return jsonify({"status":"success", "mensaje": "Registro creado con éxito"}), HTTPStatus.CREATED
+            return jsonify({"status":"success", "mensaje": "Compra realizada con éxito"}), HTTPStatus.CREATED
     
     except sqlite3.Error as e:
         print("error", e)
         return jsonify({"status":"fail", "mensaje": "Error en base de datos: {}".format(e)}), HTTPStatus.BAD_REQUEST
+
 
 
 

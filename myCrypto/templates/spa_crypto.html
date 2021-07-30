@@ -9,89 +9,127 @@
     <script src="/static/js/spa_crypto.js"></script> <!-- Esta linea sirve para que el navegador enlace al archivo spa.js que es donde se va a crear el template que va a mostrar la pagina-->
 </head>
 <body>
-    <header>My Crypto Invest App</header>
-    <section class="container" id="principal">
-        <h3 class="title is-3">Registro de movimientos</h3>
-        <div class="lista-movimientos">
-            <table is-striped is-hoverable class="table" name="tabla-movimientos" id="tabla-movimientos">
-                <thead>
-                    <tr is-selected>
-                        <th>fecha</th>
-                        <th>hora</th>
-                        <th>moneda_from</th>
-                        <th>cantidad_inicial</th>
-                        <th>moneda_to</th>
-                        <th>cantidad_resultante</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a class="navbar-item">
+                <img src="/static/png/fuego_logo.png" alt="site logo" style="max-height: 300px" class="py-2 px-2">
+            </a>
         </div>
+    </nav>
+    
+    <section class="section" id="principal">
+        
+            <div class="container">
+                <div class="columns">
+                    <div class="column is-8">
+                        <h3 class="title is-3">Registro de movimientos</h3>
+                            <div class="table-container">
+                                <table class="table is-striped is-hoverable is-primary" name="tabla-movimientos" id="tabla-movimientos">
+                                    <thead class="has-backgorund-info">
+                                        <tr is-selected>
+                                            <th>fecha</th>
+                                            <th>hora</th>
+                                            <th>moneda_from</th>
+                                            <th>cantidad_inicial</th>
+                                            <th>moneda_to</th>
+                                            <th>cantidad_resultante</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody> 
+                                </table>
+                            </div>
+                    </div>
+    
+                    <div class="column is-4">
+                        <h3 class="title is-3">Estado de la inversión</h3>
+                        <div class="is-size-5 mb-4">Total invertido (€):</div>
+                        <div class="is-size-5 mb-4">Valor actual (€):</div>
+                        <div class="is-size-5 mb-4">Beneficio obtenido (€):</div>
+                        
+                        <button class="button is-success is-hovered is-focused" id="actualizar" >Actualizar</button>
+                    </div>
+                </div>
+            </div>
+    
+
     </section> 
     <hr>
     <div class="detail-movimiento container">
         <form>
             <div class="row">
                 <input type="hidden" id="idMovimiento">
+                <input type="hidden" id="cantidad_inicial_oculta">
             </div>
             
             <div class="row">
-                <div class="column">
-                    <label for="moneda_from">From</label>
-                    <select name="moneda_from" id="moneda_from">
-                        <option value="EUR">Euro</option>
-                        <option value="BTC">Bitcoin</option>
-                        <option value="ETH">Ethereum</option>
-                        <option value="LTC">Litecoin</option>
-                        <option value="XRP">Ripple</option>
-                        <option value="BCH">Bitcoin Cash</option>
-                        <option value="BNB">Binance Coin</option>
-                        <option value="USDT">Tether</option>
-                        <option value="EOS">Eos</option>
-                        <option value="BSV">Bitcoin SV</option>
-                        <option value="XLM">Stellar</option>
-                        <option value="ADA">Cardano</option>
-                        <option value="TRX">Tron</option>
-                        <option value="EGLD">Elrond</option>
-                        <option value="SOL">Solana</option>
-                        <option value="XOR">Sora</option>
-                        <option value="DOT">Polkadot</option>
-                        <option value="ORN">Orion Protocol</option>
-                        <option value="LINK">Chainlink</option>
-                        <option value="MATIC">Polygon</option>
-                    </select>
-                    <label for="cantidad_inicial">Cantidad inicial</label>
-                    <input type="number" name="cantidad_inicial" id="cantidad_inicial"> 
+                <div class="column is-8">
+                    <div class="field">
+                        <label class="label" for="moneda_from">De</label>
+                        <div class="control">
+                            <select name="moneda_from" id="moneda_from">
+                                <option value="EUR">Euro(EUR)</option>
+                                <option value="BNB">Binance Coin(BNB)</option>
+                                <option value="BTC">Bitcoin(BTC)</option>
+                                <option value="BCH">Bitcoin Cash(BCH)</option>
+                                <option value="BSV">Bitcoin SV(BSV)</option>
+                                <option value="ADA">Cardano(ADA)</option>
+                                <option value="LINK">Chainlink(LINK)</option>
+                                <option value="EGLD">Elrond(EGLD)</option>
+                                <option value="ETH">Ethereum(ETH)</option>
+                                <option value="EOS">Eos(EOS)</option>
+                                <option value="LTC">Litecoin(LTC)</option>
+                                <option value="ORN">Orion Protocol(ORN)</option>
+                                <option value="DOT">Polkadot(DOT)</option>
+                                <option value="MATIC">Polygon(MATIC)</option>
+                                <option value="XRP">Ripple(XRP)</option>
+                                <option value="SOL">Solana(SOL)</option>
+                                <option value="XOR">Sora(XOR)</option>
+                                <option value="XLM">Stellar(XLM)</option>
+                                <option value="USDT">Tether(USDT)</option>
+                                <option value="TRX">Tron(TRX)</option>
+                            </select>
+                        <label class="label" for="cantidad_inicial">Cantidad inicial</label>
+                        <input type="number" name="cantidad_inicial" id="cantidad_inicial" placeholder="0"> 
+                        </div>
+                    </div> 
                 </div>
-                
+            </div>   
                 <div class="column">
-                    <label for="moneda_to">To</label>
-                    <select name="moneda_to" id="moneda_to">
-                        <option value="EUR">Euro</option>
-                        <option value="BTC">Bitcoin</option>
-                        <option value="ETH">Ethereum</option>
-                        <option value="LTC">Litecoin</option>
-                        <option value="XRP">Ripple</option>
-                        <option value="BCH">Bitcoin Cash</option>
-                        <option value="BNB">Binance Coin</option>
-                        <option value="USDT">Tether</option>
-                        <option value="EOS">Eos</option>
-                        <option value="BSV">Bitcoin SV</option>
-                        <option value="XLM">Stellar</option>
-                        <option value="ADA">Cardano</option>
-                        <option value="TRX">Tron</option>
-                        <option value="EGLD">Elrond</option>
-                        <option value="SOL">Solana</option>
-                        <option value="XOR">Sora</option>
-                        <option value="DOT">Polkadot</option>
-                        <option value="ORN">Orion Protocol</option>
-                        <option value="LINK">Chainlink</option>
-                        <option value="MATIC">Polygon</option>
-                    </select>
-                    <label for="cantidad_resultante">Cantidad resultante</label>
-                    <input type="number" name="cantidad_resultante" id="cantidad_resultante" step="any">
+                    <label for="moneda_to">A</label>
+                        <select name="moneda_to" id="moneda_to">
+                            <option value="EUR">Euro(EUR)</option>
+                            <option value="BNB">Binance Coin(BNB)</option>
+                            <option value="BTC">Bitcoin(BTC)</option>
+                            <option value="BCH">Bitcoin Cash(BCH)</option>
+                            <option value="BSV">Bitcoin SV(BSV)</option>
+                            <option value="ADA">Cardano(ADA)</option>
+                            <option value="LINK">Chainlink(LINK)</option>
+                            <option value="EGLD">Elrond(EGLD)</option>
+                            <option value="ETH">Ethereum(ETH)</option>
+                            <option value="EOS">Eos(EOS)</option>
+                            <option value="LTC">Litecoin(LTC)</option>
+                            <option value="ORN">Orion Protocol(ORN)</option>
+                            <option value="DOT">Polkadot(DOT)</option>
+                            <option value="MATIC">Polygon(MATIC)</option>
+                            <option value="XRP">Ripple(XRP)</option>
+                            <option value="SOL">Solana(SOL)</option>
+                            <option value="XOR">Sora(XOR)</option>
+                            <option value="XLM">Stellar(XLM)</option>
+                            <option value="USDT">Tether(USDT)</option>
+                            <option value="TRX">Tron(TRX)</option>
+                        </select>
+                    <div class="field has-addons">    
+                        <div class="control">
+                            <label for="cantidad_resultante">Cantidad resultante</label>
+                            <input type="number" name="cantidad_resultante" id="cantidad_resultante" readonly>
+                        </div>
+                        <div class="control">
+                            <button class="button is-info is-hovered is-focused" id="convertir">Convertir</button>
+                        </div>
+                    </div>
                 </div>
-
+            </div>  
         
             <div class="row">
                 <div class="column">

@@ -1,0 +1,5 @@
+select#moneda_from option[value="BTC"]   { background-image:url(https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=013);   }
+
+.tabla-movimientos tbody tr:hover { /*Esto es para que cuando pase por encima de cada fila de la tabla, esta se sombree*/
+    background-color: aquamarine;
+}
