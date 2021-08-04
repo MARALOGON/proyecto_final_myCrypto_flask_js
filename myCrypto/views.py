@@ -5,6 +5,8 @@ from flask import jsonify, render_template, request, Response
 import requests
 import sqlite3
 from http import HTTPStatus  
+from datetime import date, time
+
 
 
 
@@ -21,7 +23,7 @@ def listaMovimientos():
 
 @app.route('/api/v1/saldos')
 def saldosCrypto():
-    query = "SELECT moneda_to SUM (cantidad_inicial) FROM movimientos_crypto GROUP BY moneda_to"
+    query = "SELECT moneda_to, SUM(cantidad_resultante) AS total_saldos FROM movimientos_crypto GROUP BY moneda_to"
 
     try:
         saldos = dbManager.consultaMuchasSQL(query)
@@ -44,6 +46,8 @@ def movimientosAPI():
 @app.route('/api/v1/movimiento/<int:id>', methods=['GET'])
 @app.route('/api/v1/movimiento', methods=['POST'])
 def muestraMovimientoId(id=None):
+    fecha = date()
+    hora = time()
     movimiento = dbManager.consultaUnaSQL("SELECT * FROM movimientos_crypto WHERE id = ?", [id])
     try:
         if request.method == 'GET':
@@ -57,11 +61,15 @@ def muestraMovimientoId(id=None):
     
 
         if request.method == 'POST':
+            datos = request.json
+            datos["fecha"] = str(fecha)
+            datos["hora"] = str(hora)
             dbManager.modificaTablaSQL("""
             INSERT INTO movimientos_crypto 
                 (fecha, hora, moneda_from, cantidad_inicial, moneda_to, cantidad_resultante) 
             VALUES (:fecha, :hora, :moneda_from, :cantidad_inicial, :moneda_to, :cantidad_resultante)
-            """, request.json) 
+            """, datos) 
+            print("enviado: {}".format(datos))
     
             return jsonify({"status":"success", "mensaje": "Compra realizada con éxito"}), HTTPStatus.CREATED
     

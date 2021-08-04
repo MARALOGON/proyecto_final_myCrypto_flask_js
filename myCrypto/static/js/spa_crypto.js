@@ -22,7 +22,7 @@ const criptomonedas = {
 
 }
 
-const losMovimientos = {}
+let losMovimientos = {}
 
 
 
@@ -36,6 +36,12 @@ function listaMovimientos() {
         }
 
         //losMovimientos = respuesta.movimientos 
+        lasMonedas = respuesta.movimientos_crypto
+        //console.log(Object.keys(lasMonedas))
+        
+        
+
+
         
         
         //tbody.innerHTML = "" 
@@ -72,7 +78,43 @@ function llamaApiMovimientos() {
     xhr.open('GET', `http://localhost:5000/api/v1/movimientos`, true) 
     xhr.send()
 }
+/*
+function listaSaldos() {
+    if (this.readyState === 4 && this.status === 200) {   
+        const respuesta = JSON.parse(this.responseText) 
+        
+        if (respuesta.status !== "success") {
+            alert("Error en la consulta de saldos")
+            return
+        }
 
+        for (let i=0; i < respuesta.movimientos_crypto.length; i++) { 
+            const saldo = respuesta.movimientos_crypto[i] 
+            
+            const fila = document.createElement("tr")
+
+
+            const datos = `
+                <td>${saldo.moneda_to}</td>
+                <td>${saldo.cantidad_resultante}</td>
+            `
+            fila.innerHTML = datos 
+            const tbody = document.querySelector(".table_saldos tbody") 
+            tbody.appendChild(fila) //Se ubica dentro de cada fila que se crea, de cada <tr>
+        
+        }
+
+    }
+}
+
+
+
+function llamaApiSaldos(){
+    xhr.open('GET', `http://localhost:5000/api/v1/saldos`, true) 
+    xhr.onload = listaSaldos
+    xhr.send()
+}
+*/
 function capturaFormCompra() { 
     var hoy = new Date()
     var hora_actual = new Date()
@@ -88,6 +130,38 @@ function capturaFormCompra() {
     return movimiento 
 
 }
+
+function limpiaForm(capturaFormCompra) {
+  var campos = capturaFormCompra.elements;
+
+  capturaFormCompra.reset();
+
+  for(i=0; i<campos.length; i++) {
+
+    field_type = campos[i].type.toLowerCase();
+
+    switch(field_type) {
+      case "fecha":
+      case "hora":
+      case "cantidad_inicial":
+      case "cantidad_inicial_oculta":
+      case "cantidad_resultante":
+        campos[i].value = "";
+        break;
+
+
+      case "moneda_from":
+      case "moneda_to":
+        campos[i].selectedIndex = -1;
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+
+
 
 function validarConversion() {
     var moneda_from = document.getElementById("moneda_from").value;
@@ -172,7 +246,7 @@ function llamaApiPrecios(ev) {
 
 
 function RecibeApiConversion() {
-    if (this.readyState === 4 && this.status === 200) {
+    if (this.readyState === 4 && this.status === 200 || this.status === 201) {
         const conversion = JSON.parse(this.responseText)
 
         if (conversion.Response === 'False') {
@@ -216,11 +290,58 @@ function grabaCompra (ev) {
     xhr.send(JSON.stringify(compra))   //El metodo stringify lo que hace en este caso es coger un objeto de javascript y convertirlo en un texto que viaja al servidor, es el contrario a json.pars
 
     console.log("Compra realizada y registrada en base de datos")
+
+    limpiaForm(form)
+}
+
+function sumaEurosInvertidos() {
+    if (this.readyState === 4 && this.status === 200) {  
+        const respuesta = JSON.parse(this.responseText) 
+        console.log(respuesta)
+        
+        
+        if (respuesta.status !== "success") {
+            alert("Error en la consulta de movimientos registrados")
+            return
+        }
+    
+    const movimientos = respuesta.movimientos_crypto
+
+    var sumaEur = {}
+    for(let clave of movimientos) {
+        
+        if(!sumaEur['moneda_from' + clave.moneda_from]) {
+            sumaEur['moneda_from' + clave.moneda_from] = 0
+        }
+        if (clave.moneda_from === "EUR") {
+            sumaEur['moneda_from' + clave.moneda_from] += clave.cantidad_inicial
+        }
+        //if(cantidad.moneda_from != "EUR" && cantidad.cantidad_inicial > 0) {
+
+        //} 
+    
+    
+    }
+    total_invertido=sumaEur.moneda_fromEUR
+    document.getElementById('total_invertido').value=total_invertido
+    console.log(sumaEur)
+    }
+}
+
+function actualizaStatus(){
+    xhr3 = new XMLHttpRequest() 
+    xhr3.onload = sumaEurosInvertidos
+    xhr3.open('GET', `http://localhost:5000/api/v1/movimientos`, true) 
+    xhr3.send()
 }
 
 
+  
+
 window.onload = function() { 
     llamaApiMovimientos() 
+
+    //llamaApiSaldos()
 
     document.querySelector("#convertir")
         .addEventListener("click", llamaApiPrecios)
@@ -230,9 +351,9 @@ window.onload = function() {
         .addEventListener("click", grabaCompra)
 
     //document.querySelector("#cancelar")
-    //addEventListener("click", llamaApiPrecios)
+        //.addEventListener("click", llamaApiPrecios)
 
-    //document.querySelector("#actualizar")
-       // .addEventListener("click", actualizarStatus)
+    document.querySelector("#actualizar")
+        .addEventListener("click", actualizaStatus)
 
 }

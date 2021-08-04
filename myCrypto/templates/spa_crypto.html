@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Crypto Invest</title>
+    <title>Crypto Invest App</title>
     <link rel="stylesheet" href="/static/css/bulma.css"><!-- esta linea enlaza a la carpeta static/css para que el navegador muestre los resultados con estilos y no solo un json-->
     <script src="/static/js/spa_crypto.js"></script> <!-- Esta linea sirve para que el navegador enlace al archivo spa.js que es donde se va a crear el template que va a mostrar la pagina-->
 </head>
@@ -12,17 +12,19 @@
 
     <nav class="navbar">
         <div class="navbar-brand">
-            <a class="navbar-item">
-                <img src="/static/png/fuego_logo.png" alt="site logo" style="max-height: 300px" class="py-2 px-2">
-            </a>
+            <div class="navbar-start">
+                <a class="navbar-item">
+                    <img src="/static/png/fuego_logo.png" alt="site logo" style="max-height: 300px" class="py-2 px-2">
+                </a>
+            </div>
         </div>
     </nav>
     
-    <section class="section" id="principal">
+    <section class="section" id="principal"> 
         
             <div class="container">
                 <div class="columns">
-                    <div class="column is-8">
+                    <div class="column is-7.5">
                         <h3 class="title is-3">Registro de movimientos</h3>
                             <div class="table-container">
                                 <table class="table is-striped is-hoverable is-primary" name="tabla-movimientos" id="tabla-movimientos">
@@ -43,19 +45,57 @@
     
                     <div class="column is-4">
                         <h3 class="title is-3">Estado de la inversión</h3>
-                        <div class="is-size-5 mb-4">Total invertido (€):</div>
+                        <label class="label is-size-5 mb-4">Total invertido (€):</label>
+                        <input class="input is-normal" type="number" name="total_invertido" id="total_invertido" readonly>
                         <div class="is-size-5 mb-4">Valor actual (€):</div>
                         <div class="is-size-5 mb-4">Beneficio obtenido (€):</div>
                         
-                        <button class="button is-success is-hovered is-focused" id="actualizar" >Actualizar</button>
+                        <button class="button is-success is-hovered is-focused" id="actualizar" >Actualizar</button><br/>
+                        <br/>
+                    <div class="column"> 
+                    <h3 class="title is-3">Saldos actuales</h3>
+                    <div class="container">
+                        <!--<table class="table-saldos is-striped is-hoverable is-primary" name="tabla-saldos" id="tabla-saldos">
+                            <thead class="has-backgorund-info">
+                                <tr is-selected>
+                                    <th>moneda</th>
+                                    <th>saldo</th>
+                                    <th>valor_en_euros</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <p class="subtitle is-6">Bitcoin(BTC)</p>
+                            <figure class="image is-24x24">
+                                <img class="is-rounded" src="/static/png/bitcoin-btc-logo.png">
+                            </figure>-->
+                            
+                        <div class="icon-text">
+                            
+                                <figure class="is-rounded" src="/static/png/bitcoin-btc-logo.png"></figure>
+                            
+                            <span>Bitcoin(BTC)</span>
+                        </div>
+                              
+                        
                     </div>
+                    </div>
+                    </div>
+                    
+                    <div class="row">  
+                        <div class="column is-4"></div>
+                            
+                        </div>
+                    </div>    
                 </div>
             </div>
-    
+            
 
     </section> 
     <hr>
+    <section class="section" id="secundaria"> 
     <div class="detail-movimiento container">
+        <h3 class="title is-3">Compra y convierte tus criptomonedas</h3>
         <form>
             <div class="row">
                 <input type="hidden" id="idMovimiento">
@@ -63,11 +103,46 @@
             </div>
             
             <div class="row">
-                <div class="column is-8">
-                    <div class="field">
-                        <label class="label" for="moneda_from">De</label>
-                        <div class="control">
-                            <select name="moneda_from" id="moneda_from">
+                
+                <div class="columns">
+                    <div class="column is-4">
+                    <!-- <div class="field"></div>-->
+                            <label class="label" for="moneda_from">De</label>
+                        <!-- <div class="control">-->
+                            <div class="select is-medium"></div>
+                                <select name="moneda_from" id="moneda_from">
+                                    <option value="EUR">Euro(EUR)</option>
+                                    <option value="BNB">Binance Coin(BNB)</option>
+                                    <option value="BTC">Bitcoin(BTC)</option>
+                                    <option value="BCH">Bitcoin Cash(BCH)</option>
+                                    <option value="BSV">Bitcoin SV(BSV)</option>
+                                    <option value="ADA">Cardano(ADA)</option>
+                                    <option value="LINK">Chainlink(LINK)</option>
+                                    <option value="EGLD">Elrond(EGLD)</option>
+                                    <option value="ETH">Ethereum(ETH)</option>
+                                    <option value="EOS">Eos(EOS)</option>
+                                    <option value="LTC">Litecoin(LTC)</option>
+                                    <option value="ORN">Orion Protocol(ORN)</option>
+                                    <option value="DOT">Polkadot(DOT)</option>
+                                    <option value="MATIC">Polygon(MATIC)</option>
+                                    <option value="XRP">Ripple(XRP)</option>
+                                    <option value="SOL">Solana(SOL)</option>
+                                    <option value="XOR">Sora(XOR)</option>
+                                    <option value="XLM">Stellar(XLM)</option>
+                                    <option value="USDT">Tether(USDT)</option>
+                                    <option value="TRX">Tron(TRX)</option>
+                                </select>
+                                
+                            <label class="label" for="cantidad_inicial">Cantidad inicial</label>
+                            <input class="input is-normal" type="number" name="cantidad_inicial" id="cantidad_inicial" placeholder="0"> 
+                            <!--</div>-->
+                        <!--</div> -->
+                    </div>
+                
+                    <div class="column is-4">
+                        <label class="label" for="moneda_to">A</label>
+                        <div class="select is-medium"></div>
+                            <select name="moneda_to" id="moneda_to">
                                 <option value="EUR">Euro(EUR)</option>
                                 <option value="BNB">Binance Coin(BNB)</option>
                                 <option value="BTC">Bitcoin(BTC)</option>
@@ -89,60 +164,31 @@
                                 <option value="USDT">Tether(USDT)</option>
                                 <option value="TRX">Tron(TRX)</option>
                             </select>
-                        <label class="label" for="cantidad_inicial">Cantidad inicial</label>
-                        <input type="number" name="cantidad_inicial" id="cantidad_inicial" placeholder="0"> 
-                        </div>
-                    </div> 
-                </div>
-            </div>   
-                <div class="column">
-                    <label for="moneda_to">A</label>
-                        <select name="moneda_to" id="moneda_to">
-                            <option value="EUR">Euro(EUR)</option>
-                            <option value="BNB">Binance Coin(BNB)</option>
-                            <option value="BTC">Bitcoin(BTC)</option>
-                            <option value="BCH">Bitcoin Cash(BCH)</option>
-                            <option value="BSV">Bitcoin SV(BSV)</option>
-                            <option value="ADA">Cardano(ADA)</option>
-                            <option value="LINK">Chainlink(LINK)</option>
-                            <option value="EGLD">Elrond(EGLD)</option>
-                            <option value="ETH">Ethereum(ETH)</option>
-                            <option value="EOS">Eos(EOS)</option>
-                            <option value="LTC">Litecoin(LTC)</option>
-                            <option value="ORN">Orion Protocol(ORN)</option>
-                            <option value="DOT">Polkadot(DOT)</option>
-                            <option value="MATIC">Polygon(MATIC)</option>
-                            <option value="XRP">Ripple(XRP)</option>
-                            <option value="SOL">Solana(SOL)</option>
-                            <option value="XOR">Sora(XOR)</option>
-                            <option value="XLM">Stellar(XLM)</option>
-                            <option value="USDT">Tether(USDT)</option>
-                            <option value="TRX">Tron(TRX)</option>
-                        </select>
-                    <div class="field has-addons">    
-                        <div class="control">
-                            <label for="cantidad_resultante">Cantidad resultante</label>
-                            <input type="number" name="cantidad_resultante" id="cantidad_resultante" readonly>
-                        </div>
-                        <div class="control">
-                            <button class="button is-info is-hovered is-focused" id="convertir">Convertir</button>
-                        </div>
-                    </div>
-                </div>
-            </div>  
-        
-            <div class="row">
-                <div class="column">
-                    <button class="button is-info is-hovered is-focused" id="convertir">Convertir</button>
-                
-                    <button class="button is-success is-hovered is-focused" id="comprar" >Comprar</button>
                         
-                    <button class="button is-danger is-hovered is-focused" id="cancelar" >Cancelar</button>
+                        <label class="label" for="cantidad_resultante">Cantidad resultante</label>
+                        <input class="input is-normal" type="number" name="cantidad_resultante" id="cantidad_resultante" readonly>
+                    </div> 
+                    
                 </div>
+            </div>     
+                    
+                
+            <div class="row">
+                <div class="column"></div>
+                
+                    <button class="button is-info is-hovered is-focused" id="convertir">Convertir</button>
+                    
+                    <button class="button is-pulled-center is-success is-hovered is-focused" id="comprar" >Comprar</button>
+                        
+                     <button class="button is-pulled-center is-danger is-hovered is-focused" id="cancelar" >Cancelar</button>
+                       
+                    </div>   
+                </div>  
             </div>
-        </form>
+        </form> 
     </div>
-<footer>Original creation. Open source. &copy 2021</footer>
+    <br/>
+    <footer>Original creation. Open source. &copy 2021</footer>
 </body>
 </html>
 
