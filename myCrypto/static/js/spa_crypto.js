@@ -78,33 +78,18 @@ function llamaApiMovimientos() {
     xhr.open('GET', `http://localhost:5000/api/v1/movimientos`, true) 
     xhr.send()
 }
-/*
+
 function listaSaldos() {
     if (this.readyState === 4 && this.status === 200) {   
         const respuesta = JSON.parse(this.responseText) 
         
         if (respuesta.status !== "success") {
-            alert("Error en la consulta de saldos")
+            alert("Se ha producido un error en la consulta de saldos")
             return
         }
 
-        for (let i=0; i < respuesta.movimientos_crypto.length; i++) { 
-            const saldo = respuesta.movimientos_crypto[i] 
-            
-            const fila = document.createElement("tr")
-
-
-            const datos = `
-                <td>${saldo.moneda_to}</td>
-                <td>${saldo.cantidad_resultante}</td>
-            `
-            fila.innerHTML = datos 
-            const tbody = document.querySelector(".table_saldos tbody") 
-            tbody.appendChild(fila) //Se ubica dentro de cada fila que se crea, de cada <tr>
-        
-        }
-
-    }
+        for (var i=0; i < respuesta.movimientos_crypto.length; i++) { 
+            c
 }
 
 
@@ -114,7 +99,7 @@ function llamaApiSaldos(){
     xhr.onload = listaSaldos
     xhr.send()
 }
-*/
+
 function capturaFormCompra() { 
     var hoy = new Date()
     var hora_actual = new Date()
@@ -272,9 +257,7 @@ function RecibeApiConversion() {
 }
 
 function grabaCompra (ev) {
-    ev.preventDefault()   // Con el ev.preventDefault, lo que se consigue es que por defecto, no se relance la pagina, se para ese evento
-    //En esta funcion no ponemos nada sobre guardar el id, porque cuando se crea el movimiento aun no tiene, quien se lo va a asignar es la base de datos, cuando la peticion viaje al servidor
-    
+    ev.preventDefault()   
 
     const compra = capturaFormCompra() //En esta variable movimiento guardo el objeto que devuelve la funcion capturaFormMovimiento, que son los nuevos datos que he introducido en el formulario para crera un nuevo registro
     
