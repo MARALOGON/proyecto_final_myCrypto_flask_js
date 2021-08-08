@@ -8,14 +8,21 @@
     <link rel="stylesheet" href="/static/css/bulma.css"><!-- esta linea enlaza a la carpeta static/css para que el navegador muestre los resultados con estilos y no solo un json-->
     <script src="/static/js/spa_crypto.js"></script> <!-- Esta linea sirve para que el navegador enlace al archivo spa.js que es donde se va a crear el template que va a mostrar la pagina-->
 </head>
+  
 <body>
 
-    <nav class="navbar">
+    <nav class="navbar is-warning">
         <div class="navbar-brand">
             <div class="navbar-start">
                 <a class="navbar-item">
-                    <img src="/static/png/fuego_logo.png" alt="site logo" style="max-height: 300px" class="py-2 px-2">
+                    <img src="/static/png/fuego_logo1.png" alt="site logo" style="max-height: 350px" class="py-2 px-2">
+                    <!--<div class="content is-centered is-size-5-widescreen is-family-sans-serif has-text-primary">
+                        <h1>Buy</h1>
+                        <h1>Swap your Crypto</h1>
+                        <h1>Hold</h1>
+                    </div>-->
                 </a>
+                
             </div>
         </div>
     </nav>
@@ -96,10 +103,13 @@
     <section class="section" id="secundaria"> 
     <div class="detail-movimiento container">
         <h3 class="title is-3">Compra y convierte tus criptomonedas</h3>
-        <form>
+        <form name="form">
             <div class="row">
                 <input type="hidden" id="idMovimiento">
                 <input type="hidden" id="cantidad_inicial_oculta">
+                <input type="hidden" id="moneda_to_oculta">
+                <input type="hidden" id="moneda_from_oculta">
+
             </div>
             
             <div class="row">
@@ -132,16 +142,16 @@
                                     <option value="USDT">Tether(USDT)</option>
                                     <option value="TRX">Tron(TRX)</option>
                                 </select>
-                            </div>   
+                            </div>  
                             <label class="label" for="cantidad_inicial">Cantidad inicial</label>
                             <input class="input is-normal" type="number" name="cantidad_inicial" id="cantidad_inicial" placeholder="0"> 
-                            <!--</div>-->
+                        
                         <!--</div> -->
                     </div>
                 
                     <div class="column is-4">
                         <label class="label" for="moneda_to">A</label>
-                        <div class="select is-medium"></div>
+                        <div class="select is-normal">
                             <select name="moneda_to" id="moneda_to">
                                 <option value="EUR">Euro(EUR)</option>
                                 <option value="BNB">Binance Coin(BNB)</option>
@@ -164,7 +174,7 @@
                                 <option value="USDT">Tether(USDT)</option>
                                 <option value="TRX">Tron(TRX)</option>
                             </select>
-                        
+                        </div>
                         <label class="label" for="cantidad_resultante">Cantidad resultante</label>
                         <input class="input is-normal" type="number" name="cantidad_resultante" id="cantidad_resultante" readonly>
                     </div> 
@@ -178,7 +188,7 @@
                 
                     <button class="button is-info is-hovered is-focused" id="convertir">Convertir</button>
                     
-                    <button class="button is-pulled-center is-success is-hovered is-focused" id="comprar" >Comprar</button>
+                    <button class="button is-pulled-center is-success is-hovered is-focused" id="comprar" type="submit">Comprar</button>
                         
                      <button class="button is-pulled-center is-danger is-hovered is-focused" id="cancelar" >Cancelar</button>
                        
