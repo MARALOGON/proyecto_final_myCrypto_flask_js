@@ -259,13 +259,18 @@ function llamaApiPrecios(ev) {
     
     const llamada = {}
     llamada.moneda_from = document.querySelector("#moneda_from").value
+    llamada.moneda_from_oculta = document.querySelector("#moneda_from").value
     llamada.cantidad_inicial = document.querySelector("#cantidad_inicial").value
     llamada.cantidad_inicial_oculta = document.querySelector("#cantidad_inicial").value
     llamada.moneda_to = document.querySelector("#moneda_to").value
+    llamada.moneda_to_oculta = document.querySelector("#moneda_to").value
+
     
-    //console.log(Object.values(llamada));
+    console.log(llamada)
 
     document.querySelector("#cantidad_inicial_oculta").value = document.querySelector("#cantidad_inicial").value
+    document.querySelector("#moneda_from_oculta").value = document.querySelector("#moneda_from").value
+    document.querySelector("#moneda_to_oculta").value = document.querySelector("#moneda_to").value
 
     //let cantidad_inicial_oculta = document.getElementById("cantidad_inicial").value;
     //document.getElementById("cantidad_inicial_oculta").value = cantidad_inicial_oculta
@@ -371,17 +376,65 @@ function sumaEurosInvertidos() {
         if (clave.moneda_from != "EUR") {
             sumaCantidadesFrom[clave.moneda_from] += clave.cantidad_inicial
             
-        }
-
-        //} 
-    
+        }    
     
     }
-    total_invertido=sumaCantidadesFrom.EUR
-    document.getElementById('total_invertido').value=total_invertido
+    total_invertido_euros=sumaCantidadesFrom.EUR
+    document.getElementById('total_invertido').value=total_invertido_euros
     console.log(sumaCantidadesFrom)
 
-    var sumaCantidadesTo = {}
+    //total_invertido_crypto=sumaCantidadesFrom.moneda_from
+    //document.getElementById('valor_actual').value=total_invertido_crypto
+    
+    var sumaCantidadesTo = []
+    movimientos.forEach(function (a) {
+
+        if (!this[a.moneda_to]) {
+            this[a.moneda_to] = { moneda_to: a.moneda_to, cantidad_resultante: 0 };
+            sumaCantidadesTo.push(this[a.moneda_to]);
+    }
+        this[a.moneda_to].cantidad_resultante += a.cantidad_resultante    
+    }, [])
+
+    for(let i=0; i<sumaCantidadesTo.length; i++){
+        xhr5 = new XMLHttpRequest()
+        xhr5.onload = valorCryptoEuros
+    
+    
+        xhr5.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${sumaCantidadesTo[i].cantidad_resultante}&symbol=${sumaCantidadesTo[i].moneda_to}&convert=EUR&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
+
+
+        xhr5.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+        xhr5.send()
+    
+    }
+    console.log(xhr5.responseText)
+    console.log(sumaCantidadesTo)
+
+    var sumaCantidadesFrom = []
+    movimientos.forEach(function (a) {
+
+        if (!this[a.moneda_from]) {
+            this[a.moneda_from] = { moneda_from: a.moneda_from, cantidad_inicial: 0 };
+            sumaCantidadesFrom.push(this[a.moneda_from]);
+    }
+        this[a.moneda_from].cantidad_inicial += a.cantidad_inicial    
+    }, [])
+
+    /*for(let i=0; i<sumaCantidadesFrom.length; i++){
+        xhr5 = new XMLHttpRequest()
+        xhr5.onload = valorCryptoEuros
+    
+    
+        xhr5.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${sumaCantidadesFrom[i].cantidad_inicial}&symbol=${sumaCantidadesFrom[i].moneda_from}&convert=EUR&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
+
+
+        xhr5.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+        xhr5.send()
+    }
+    console.log(sumaCantidadesFrom)*/
+
+    /*var sumaCantidadesTo = {}
     for(let clave of movimientos) {
         
         if(!sumaCantidadesTo[clave.moneda_to]) {
@@ -389,12 +442,44 @@ function sumaEurosInvertidos() {
         }
         if (clave.moneda_to in criptomonedas) {
             sumaCantidadesTo[clave.moneda_to] += clave.cantidad_resultante
+    
         }
-            
-        }
-    console.log(sumaCantidadesTo)
+   
+    /*Solucion con reduce, pero no se restar los valores de las claves que esten repetidos
+    
+    const merged = Object.entries(sumaCantidadesTo).reduce((acc, [key, value]) => 
+    // if key is already in map1, add the values, otherwise, create new pair
+    ({ ...acc, [key]: (acc[key] || 0) + value })
+    , { ...sumaCantidadesFrom });
+
+    console.log(merged); 
+    */
+    
+    //const keys = Object.keys(sumaCantidadesTo)
+    //const values = Object.values(sumaCantidadesTo)
+
+    //for(let i=0; i<sumaCantidadesTo.length; i++){
+    
     }
-}
+          
+    
+        
+    }
+    
+
+    
+        
+    console.log("petición de conversion a euros lanzada") 
+    
+
+    
+    
+    //saldoCantidades = sumaCantidadesTo - sumaCantidadesFrom
+    
+    //console.log(saldoCantidades) 
+
+
+
 
 function actualizaStatus(){
     xhr3 = new XMLHttpRequest() 
@@ -404,20 +489,37 @@ function actualizaStatus(){
 }
 
 function valorCryptoEuros(){
-    if (this.readyState === 4 && this.status === 200) {  
-        const respuesta = JSON.parse(this.responseText) 
-        
-        
-        if (respuesta.status !== "success") {
-            alert("Error en la actualizacion de status")
+    if (this.readyState === 4 && this.status === 200 || this.status === 201) {
+        const conversion = JSON.parse(this.responseText)
+        console.log(conversion)
+
+        if (conversion.Response === 'False') {
+            alert("Se ha producido un error en la llamada" + respuesta.mensaje)
             return
         }
-    
-    const movimientos = respuesta.movimientos_crypto
 
+        //const conversionTo = conversion.sumaCantidadesTo
+        
+        //const valorCantidadTo = conversion.sumaCantidadesTo
+        //console.log(valorCantidadTo)
+
+        //valorCantidadTo.moneda_to = document.querySelector("#moneda_to").value
+        //cantidad_to_euros = conversion.data.quote[valorCantidadTo.moneda_to].price
+        //document.getElementById('valor_actual').value=cantidad_to_euros.toFixed(2)
+        //if (llamada.moneda_to === "EUR") {
+            //document.getElementById('cantidad_resultante').value=cantidad_resultante.toFixed(2)
+        }
+        
   
-}
-}
+        
+
+        
+        //const tbody = document.querySelector(".table tbody")
+
+        
+
+    }
+
   
 
 
