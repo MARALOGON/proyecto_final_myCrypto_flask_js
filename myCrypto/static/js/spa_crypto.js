@@ -35,16 +35,7 @@ function listaMovimientos() {
             return
         }
 
-        
-        //losMovimientos = respuesta.movimientos_crypto
-        
-        
-        
-
-
-        
-        
-        //tbody.innerHTML = "" 
+     
 
         for (let i=0; i < respuesta.movimientos_crypto.length; i++) { 
             const movimiento = respuesta.movimientos_crypto[i] 
@@ -62,7 +53,7 @@ function listaMovimientos() {
             `
             fila.innerHTML = datos 
             const tbody = document.querySelector(".table tbody") 
-            tbody.appendChild(fila) //Se ubica dentro de cada fila que se crea, de cada <tr>
+            tbody.appendChild(fila) 
         
         }
 
@@ -110,7 +101,6 @@ function listaSaldos() {
         for (var x = 0; x < monedas_to.length; x++) {
             const listItem = document.createElement('li')
             listItem.textContent = monedas_to[x]
-            //listItem.textContent = monedas_to[x]
             myList.appendChild(listItem)
         }
         console.log(monedas_to)
@@ -133,8 +123,8 @@ function listaSaldos() {
 
 function llamaApiSaldos(){
     xhr4 = new XMLHttpRequest() 
-    xhr4.open('GET', `http://localhost:5000/api/v1/movimientos`, true) 
     xhr4.onload = listaSaldos
+    xhr4.open('GET', `http://localhost:5000/api/v1/movimientos`, true) 
     xhr4.send()
 }
 
@@ -256,7 +246,6 @@ function llamaApiPrecios(ev) {
     ev.preventDefault()
    
 
-    
     const llamada = {}
     llamada.moneda_from = document.querySelector("#moneda_from").value
     llamada.moneda_from_oculta = document.querySelector("#moneda_from").value
@@ -272,8 +261,6 @@ function llamaApiPrecios(ev) {
     document.querySelector("#moneda_from_oculta").value = document.querySelector("#moneda_from").value
     document.querySelector("#moneda_to_oculta").value = document.querySelector("#moneda_to").value
 
-    //let cantidad_inicial_oculta = document.getElementById("cantidad_inicial").value;
-    //document.getElementById("cantidad_inicial_oculta").value = cantidad_inicial_oculta
 
     if (!validarConversion()) {
         return 
@@ -333,18 +320,18 @@ function RecibeApiConversion() {
 function grabaCompra (ev) {
     ev.preventDefault()   
 
-    const compra = capturaFormCompra() //En esta variable movimiento guardo el objeto que devuelve la funcion capturaFormMovimiento, que son los nuevos datos que he introducido en el formulario para crera un nuevo registro
+    const compra = capturaFormCompra() 
     
     if (!validarCompra()) {
         return 
     }
 
-    xhr.open("POST", `http://localhost:5000/api/v1/movimiento`, true)  //Ahora lanzo la peticion con el xhr.open, sin id 
-    xhr.onload = listaMovimientos //Este onload, que es el punto de recuperacion de los datos, es para esta petición de PUT. Se va a la función recibeRespuesta, que es la que va a mostrar la modificación en la tabla de movimientos al ejecutarse 
+    xhr.open("POST", `http://localhost:5000/api/v1/movimiento`, true)  
+    xhr.onload = listaMovimientos 
         
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8") //Esto lo que está diciendo es: voy a mter en la  cabecera un json, para que en el archivo views del servidor sepa lo que esperar. En la cabecera viaja el tipo de informacion que va en el body, que en este caso es un json
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8") 
         
-    xhr.send(JSON.stringify(compra))   //El metodo stringify lo que hace en este caso es coger un objeto de javascript y convertirlo en un texto que viaja al servidor, es el contrario a json.pars
+    xhr.send(JSON.stringify(compra))   
 
     console.log("Compra realizada y registrada en base de datos")
 
@@ -364,24 +351,23 @@ function sumaEurosInvertidos() {
     
     const movimientos = respuesta.movimientos_crypto
 
-    var sumaCantidadesFrom = {}
+    var sumaEurosFrom = {}
     for(let clave of movimientos) {
         
-        if(!sumaCantidadesFrom[clave.moneda_from]) {
-            sumaCantidadesFrom[clave.moneda_from] = 0
+        if(!sumaEurosFrom[clave.moneda_from]) {
+            sumaEurosFrom[clave.moneda_from] = 0
         }
         if (clave.moneda_from === "EUR") {
-            sumaCantidadesFrom[clave.moneda_from] += clave.cantidad_inicial
+            sumaEurosFrom[clave.moneda_from] += clave.cantidad_inicial
         }
-        if (clave.moneda_from != "EUR") {
-            sumaCantidadesFrom[clave.moneda_from] += clave.cantidad_inicial
+        //if (clave.moneda_from != "EUR") {
+            //sumaEurosFrom[clave.moneda_from] += clave.cantidad_inicial
             
-        }    
+        //}    
     
     }
-    total_invertido_euros=sumaCantidadesFrom.EUR
+    total_invertido_euros=sumaEurosFrom.EUR
     document.getElementById('total_invertido').value=total_invertido_euros
-    console.log(sumaCantidadesFrom)
 
     //total_invertido_crypto=sumaCantidadesFrom.moneda_from
     //document.getElementById('valor_actual').value=total_invertido_crypto
@@ -434,31 +420,8 @@ function sumaEurosInvertidos() {
     }
     console.log(sumaCantidadesFrom)*/
 
-    /*var sumaCantidadesTo = {}
-    for(let clave of movimientos) {
-        
-        if(!sumaCantidadesTo[clave.moneda_to]) {
-            sumaCantidadesTo[clave.moneda_to] = 0
-        }
-        if (clave.moneda_to in criptomonedas) {
-            sumaCantidadesTo[clave.moneda_to] += clave.cantidad_resultante
-    
-        }
    
-    /*Solucion con reduce, pero no se restar los valores de las claves que esten repetidos
     
-    const merged = Object.entries(sumaCantidadesTo).reduce((acc, [key, value]) => 
-    // if key is already in map1, add the values, otherwise, create new pair
-    ({ ...acc, [key]: (acc[key] || 0) + value })
-    , { ...sumaCantidadesFrom });
-
-    console.log(merged); 
-    */
-    
-    //const keys = Object.keys(sumaCantidadesTo)
-    //const values = Object.values(sumaCantidadesTo)
-
-    //for(let i=0; i<sumaCantidadesTo.length; i++){
     
     }
           
