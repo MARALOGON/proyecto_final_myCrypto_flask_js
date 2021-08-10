@@ -372,6 +372,28 @@ function sumaEurosInvertidos() {
     //total_invertido_crypto=sumaCantidadesFrom.moneda_from
     //document.getElementById('valor_actual').value=total_invertido_crypto
     
+    
+    // 1. Con este bloque consigo agrupar los saldos de moneda_to en forma de objeto, siendo la clave la moneda y el valor la suma de las cantidades_to correspondientes a esa moneda. Ejemplo {ETH:0.2, BTC:0.01}
+    // pero no he conseguido hacer la llamada a API CMC con ello
+
+    var sumaCantidadesTo = {}
+    for(let clave of movimientos) {
+
+        if(!sumaCantidadesTo[clave.moneda_to]) {
+            sumaCantidadesTo[clave.moneda_to] = 0
+        }
+        if (clave.moneda_to in criptomonedas) {
+            sumaCantidadesTo[clave.moneda_to] += clave.cantidad_resultante
+        }
+
+        }
+    console.log(sumaCantidadesTo)
+
+
+    // 2. Con este bloque consigo agrupar los saldos de moneda_to en forma de array de objetos, y si consigo la llamada a API CMC con exito
+    // Donde estoy bloqueado es en como guardar en una variable la suma de las conversiones en euros que me resultan de la llamada a la API
+    // Que es lo que estoy intentando en la funcion valorCantidadesToEnEuros 
+
     var sumaCantidadesTo = []
     movimientos.forEach(function (a) {
 
@@ -384,7 +406,7 @@ function sumaEurosInvertidos() {
 
     for(let i=0; i<sumaCantidadesTo.length; i++){
         xhr5 = new XMLHttpRequest()
-        xhr5.onload = valorCryptoEuros
+        xhr5.onload = valorCantidadesToEnEuros
     
     
         xhr5.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${sumaCantidadesTo[i].cantidad_resultante}&symbol=${sumaCantidadesTo[i].moneda_to}&convert=EUR&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
@@ -394,7 +416,6 @@ function sumaEurosInvertidos() {
         xhr5.send()
     
     }
-    console.log(xhr5.responseText)
     console.log(sumaCantidadesTo)
 
     var sumaCantidadesFrom = []
@@ -409,7 +430,7 @@ function sumaEurosInvertidos() {
 
     /*for(let i=0; i<sumaCantidadesFrom.length; i++){
         xhr5 = new XMLHttpRequest()
-        xhr5.onload = valorCryptoEuros
+        xhr5.onload = valorCantidadesFromEnEuros
     
     
         xhr5.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${sumaCantidadesFrom[i].cantidad_inicial}&symbol=${sumaCantidadesFrom[i].moneda_from}&convert=EUR&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
@@ -431,8 +452,7 @@ function sumaEurosInvertidos() {
     
 
     
-        
-    console.log("petición de conversion a euros lanzada") 
+    
     
 
     
@@ -451,7 +471,7 @@ function actualizaStatus(){
     xhr3.send()
 }
 
-function valorCryptoEuros(){
+function valorCantidadesToEnEuros(){
     if (this.readyState === 4 && this.status === 200 || this.status === 201) {
         const conversion = JSON.parse(this.responseText)
         console.log(conversion)
@@ -461,6 +481,17 @@ function valorCryptoEuros(){
             return
         }
 
+        const conversiones = 
+
+        var valorEur = []
+        conversiones.forEach(function (a) {
+            if (!this[a.conversiones.data.quote("EUR")]) {
+                this[a.conversiones.data.quote("EUR")] = { EUR: a.conversiones.data.quote("EUR"), valor: 0 };
+                valorEur.push(this[a.conversiones.data.quote("EUR")]);
+        }
+            this[a.conversiones.data.quote("EUR")].price += a.valor   
+        }, [])
+        
         //const conversionTo = conversion.sumaCantidadesTo
         
         //const valorCantidadTo = conversion.sumaCantidadesTo
@@ -474,14 +505,9 @@ function valorCryptoEuros(){
         }
         
   
-        
-
-        
-        //const tbody = document.querySelector(".table tbody")
-
-        
-
     }
+
+
 
   
 

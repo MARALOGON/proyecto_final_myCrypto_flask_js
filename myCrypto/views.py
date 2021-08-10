@@ -24,7 +24,7 @@ def listaMovimientos():
 @app.route('/api/v1/saldos')
 def saldosCrypto():
     #query = "SELECT moneda_to, moneda_from, cantidad_resultante - SUM(cantidad_inicial) AS total_saldos FROM movimientos_crypto WHERE moneda_to = moneda_from GROUP BY moneda_to"SUM(cantidad_inicial) AS total_saldos_from FROM movimientos_crypto GROUP BY moneda_from
-    query = query = "SELECT moneda_to, moneda_from, SUM(cantidad_resultante) AS total_saldos_to, SUM(cantidad_inicial) AS total_saldos_from FROM movimientos_crypto GROUP BY moneda_from "
+    query = "SELECT moneda_to, moneda_from, SUM(cantidad_resultante) AS total_saldos_to, SUM(cantidad_inicial) AS total_saldos_from FROM movimientos_crypto GROUP BY moneda_from "
 
     try:
         saldos = dbManager.consultaMuchasSQL(query)
