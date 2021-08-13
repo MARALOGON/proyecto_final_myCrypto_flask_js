@@ -22,7 +22,12 @@ const criptomonedas = {
 
 }
 
-let losMovimientos = {}
+let losSaldos = {}
+//var sumaCantidadesTo
+//const movimientos = movimientos_crypto
+var cantidadFromValidada = false
+var cantdadToValidada = false
+//console.log(movimientos)
 
 
 
@@ -30,6 +35,8 @@ function listaMovimientos() {
     if (this.readyState === 4 && this.status === 200) {   
         const respuesta = JSON.parse(this.responseText) 
         
+        
+
         if (respuesta.status !== "success") {
             alert("Error en la consulta de movimientos registrados")
             return
@@ -87,7 +94,7 @@ function listaSaldos() {
         const monedas_to = movimientos[i].moneda_to
         const saldos_to = movimientos[i].cantidad_resultante
         
-        let cantidades_to = {}
+        var cantidades_to = {}
 
         for (const moneda of movimientos) {
             if (cantidades_to[moneda]) {
@@ -111,9 +118,10 @@ function listaSaldos() {
             myList.appendChild(listItem)
         }
         console.log(saldos_to)
+        console.log(cantidades_to)
     }
         
-        
+    
 
     }
 
@@ -144,69 +152,52 @@ function capturaFormCompra() {
 
 }
 
-function limpiaForm(capturaFormCompra) {
-  var campos = capturaFormCompra.elements;
-
-  capturaFormCompra.reset();
-
-  for(i=0; i<campos.length; i++) {
-
-    field_type = campos[i].type.toLowerCase();
-
-    switch(field_type) {
-      case "fecha":
-      case "hora":
-      case "cantidad_inicial":
-      case "cantidad_inicial_oculta":
-      case "cantidad_resultante":
-        campos[i].value = "";
-        break;
-
-
-      case "moneda_from":
-      case "moneda_to":
-        campos[i].selectedIndex = -1;
-        break;
-
-      default:
-        break;
-    }
-  }
-}
-
-
 
 function validarConversion() {
     var moneda_from = document.getElementById("moneda_from").value;
     var moneda_to = document.getElementById("moneda_to").value;
     var cantidad_inicial = document.getElementById("cantidad_inicial").value;
+    
     if (moneda_from === moneda_to) {
-        alert("No puedes seleccionar la misma moneda en los campos From y To")
+        swal("Error", "No puedes seleccionar la misma moneda en ambos campos", "error")
         document.getElementById("moneda_to").focus();
         return false
 
     } else if (!cantidad_inicial) { 
-        alert("Debes introducir un importe para convertir")
+        swal("Error", "Debes introducir un importe numérico para convertir", "error")
         document.getElementById("cantidad_inicial").focus();
         return false
 
    
     } else if (cantidad_inicial <= 0) {
-        alert("Debes introducir un importe superior a 0 para convertir")
+        swal("Error", "Debes introducir un importe superior a 0 para convertir", "error")
         document.getElementById("cantidad_inicial").focus();
         return false
 
     } else if (cantidad_inicial > 1000000000000) {
-        alert("Debes introducir un importe menor de 1000000000000 para convertir")
+        swal("Error", "Debes introducir un importe menor de 1000000000000 para convertir", "error")
         document.getElementById("cantidad_inicial").focus();
         return false
     }
 
     return true
+   
 }
 
+/*function submitCheck() {
+    
+    var cantidad_inicial = document.getElementById("cantidad_inicial").value;
+    var cantidad_resultante = document.getElementById("cantidad_resultante").value
+    
+    if (cantidad_inicial && cantidad_resultante) {
+ 
+        comprar.disabled = false;              
+        comprar.removeAttribute("disabled");  
+      } 
+  }*/
 
 function validarCompra() {
+
     var cantidad_inicial = document.getElementById("cantidad_inicial").value;
     var cantidad_inicial_oculta = document.getElementById("cantidad_inicial_oculta").value;
     var cantidad_resultante = document.getElementById("cantidad_resultante").value;
@@ -215,26 +206,35 @@ function validarCompra() {
     var moneda_from = document.getElementById("moneda_from").value;
     var moneda_from_oculta = document.getElementById("moneda_from_oculta").value;
 
+    
+    
+
     if (cantidad_inicial != cantidad_inicial_oculta) {
-        alert("No puedes modificar el importe a convertir")
+        swal("Error", "No puedes modificar el importe a convertir si quieres hacer la compra", "error")
         document.getElementById("cantidad_inicial").focus()
         return false
     }
 
     if (moneda_to != moneda_to_oculta) {
-        alert("No puedes cambiar la moneda seleccionada si quieres hacer la compra")
+        swal("Error", "No puedes cambiar la moneda seleccionada si quieres hacer la compra", "error")
         document.getElementById("moneda_to").focus()
         return false
     }
 
     if (moneda_from != moneda_from_oculta) {
-        alert("No puedes cambiar la moneda seleccionada si quieres hacer la compra")
+        swal("Error", "No puedes cambiar la moneda seleccionada si quieres hacer la compra", "error")
         document.getElementById("moneda_from").focus()
         return false
     }
 
+    if (!cantidad_inicial) {
+        swal("Error", "No puedes comprar sin introducir antes alguna cantidad inicial", "error")
+        document.getElementById("cantidad_inicial").focus()
+        return false
+    }
+
     if (!cantidad_resultante) {
-        alert("No puedes comprar sin antes convertir las monedas seleccionadas")
+        swal("Error", "No puedes comprar sin convertir antes alguna cantidad inicial", "error")
         document.getElementById("cantidad_resultante").focus()
         return false
     }
@@ -271,7 +271,7 @@ function llamaApiPrecios(ev) {
     xhr2.onload = RecibeApiConversion
     
     
-    xhr2.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${llamada.cantidad_inicial}&symbol=${llamada.moneda_from}&convert=${llamada.moneda_to}&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
+    xhr2.open("GET", `http://localhost:5000/api/v1/par/${llamada.moneda_from}/${llamada.moneda_to}/${llamada.cantidad_inicial}`, true)
 
    
     xhr2.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
@@ -333,10 +333,19 @@ function grabaCompra (ev) {
         
     xhr.send(JSON.stringify(compra))   
 
+    swal("Bien!", "Compra realizada y registrada en base de datos con éxito", "success")
+    
     console.log("Compra realizada y registrada en base de datos")
 
-    //limpiaForm(form)
+    document.forms["form"].reset()
+
+   
+
 }
+    
+    
+
+
 
 function sumaEurosInvertidos() {
     if (this.readyState === 4 && this.status === 200) {       
@@ -369,14 +378,93 @@ function sumaEurosInvertidos() {
     total_invertido_euros=sumaEurosFrom.EUR
     document.getElementById('total_invertido').value=total_invertido_euros
 
-    //total_invertido_crypto=sumaCantidadesFrom.moneda_from
-    //document.getElementById('valor_actual').value=total_invertido_crypto
+    var sumaCantidadesTo = []
+    movimientos.forEach(function (a) {
+
+        if (!this[a.moneda_to]) {
+            this[a.moneda_to] = { moneda: a.moneda_to, cantidad_resultante: 0 };
+            sumaCantidadesTo.push(this[a.moneda_to]);
+    }
+        this[a.moneda_to].cantidad_resultante += a.cantidad_resultante    
+    }, [])
+
+
+    for(let i=0; i<sumaCantidadesTo.length; i++){
+        xhr5 = new XMLHttpRequest()
+        xhr5.onload = valorCantidadesToEnEuros
     
     
-    // 1. Con este bloque consigo agrupar los saldos de moneda_to en forma de objeto, siendo la clave la moneda y el valor la suma de las cantidades_to correspondientes a esa moneda. Ejemplo {ETH:0.2, BTC:0.01}
+        xhr5.open("GET", `http://localhost:5000/api/v1/par/${sumaCantidadesTo[i].moneda}/EUR/${sumaCantidadesTo[i].cantidad_resultante}`, true)
+
+
+        xhr5.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+        xhr5.send()
+    
+    }
+    console.log(sumaCantidadesTo)
+
+    var sumaCantidadesFrom = []
+    movimientos.forEach(function (a) {
+
+        if (!this[a.moneda_from]) {
+            this[a.moneda_from] = { moneda: a.moneda_from, cantidad_inicial: 0 };
+            sumaCantidadesFrom.push(this[a.moneda_from]);
+    }
+        this[a.moneda_from].cantidad_inicial += a.cantidad_inicial    
+    }, [])
+
+    for(let i=0; i<sumaCantidadesFrom.length; i++){
+        xhr5 = new XMLHttpRequest()
+        xhr5.onload = valorCantidadesFromEnEuros
+    
+    
+        xhr5.open("GET", `http://localhost:5000/api/v1/par/${sumaCantidadesFrom[i].moneda}/EUR/${sumaCantidadesFrom[i].cantidad_inicial}`, true)
+
+
+        xhr5.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+        xhr5.send()
+    }
+    console.log(sumaCantidadesFrom)
+
+    const saldosCrypto =[]
+    sumaCantidadesTo.filter((t) => {
+        sumaCantidadesFrom.filter((f) => {
+            if(t.moneda_to === f.moneda_from){
+                (t.cantidad_resultante - f.cantidad_inicial)
+                saldosCrypto.push(t)
+            }
+
+
+        })
+
+
+    })
+    
+    console.log(saldosCrypto)
+    }
+   
+
+    
+
+    
+    
+    
+}
+
+        
+
+    
+    
+        
+
+    
+
+    
+/*function saldosCrypto(){
+// 1. Con este bloque consigo agrupar los saldos de moneda_to en forma de objeto, siendo la clave la moneda y el valor la suma de las cantidades_to correspondientes a esa moneda. Ejemplo {ETH:0.2, BTC:0.01}
     // pero no he conseguido hacer la llamada a API CMC con ello
 
-    var sumaCantidadesTo = {}
+    var sumaCantidadesTo = []
     for(let clave of movimientos) {
 
         if(!sumaCantidadesTo[clave.moneda_to]) {
@@ -390,78 +478,11 @@ function sumaEurosInvertidos() {
     console.log(sumaCantidadesTo)
 
 
-    // 2. Con este bloque consigo agrupar los saldos de moneda_to en forma de array de objetos, y si consigo la llamada a API CMC con exito
-    // Donde estoy bloqueado es en como guardar en una variable la suma de las conversiones en euros que me resultan de la llamada a la API
-    // Que es lo que estoy intentando en la funcion valorCantidadesToEnEuros 
-
-    var sumaCantidadesTo = []
-    movimientos.forEach(function (a) {
-
-        if (!this[a.moneda_to]) {
-            this[a.moneda_to] = { moneda_to: a.moneda_to, cantidad_resultante: 0 };
-            sumaCantidadesTo.push(this[a.moneda_to]);
-    }
-        this[a.moneda_to].cantidad_resultante += a.cantidad_resultante    
-    }, [])
-
-    for(let i=0; i<sumaCantidadesTo.length; i++){
-        xhr5 = new XMLHttpRequest()
-        xhr5.onload = valorCantidadesToEnEuros
-    
-    
-        xhr5.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${sumaCantidadesTo[i].cantidad_resultante}&symbol=${sumaCantidadesTo[i].moneda_to}&convert=EUR&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
-
-
-        xhr5.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
-        xhr5.send()
-    
-    }
-    console.log(sumaCantidadesTo)
-
-    var sumaCantidadesFrom = []
-    movimientos.forEach(function (a) {
-
-        if (!this[a.moneda_from]) {
-            this[a.moneda_from] = { moneda_from: a.moneda_from, cantidad_inicial: 0 };
-            sumaCantidadesFrom.push(this[a.moneda_from]);
-    }
-        this[a.moneda_from].cantidad_inicial += a.cantidad_inicial    
-    }, [])
-
-    /*for(let i=0; i<sumaCantidadesFrom.length; i++){
-        xhr5 = new XMLHttpRequest()
-        xhr5.onload = valorCantidadesFromEnEuros
-    
-    
-        xhr5.open("GET", `https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=${sumaCantidadesFrom[i].cantidad_inicial}&symbol=${sumaCantidadesFrom[i].moneda_from}&convert=EUR&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02`, true)
-
-
-        xhr5.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
-        xhr5.send()
-    }
-    console.log(sumaCantidadesFrom)*/
-
-   
-    
-    
-    }
-          
-    
-        
-    }
-    
+}*/  
 
     
     
     
-
-    
-    
-    //saldoCantidades = sumaCantidadesTo - sumaCantidadesFrom
-    
-    //console.log(saldoCantidades) 
-
-
 
 
 function actualizaStatus(){
@@ -471,45 +492,59 @@ function actualizaStatus(){
     xhr3.send()
 }
 
+
+var valorEurTo = []
 function valorCantidadesToEnEuros(){
+    
     if (this.readyState === 4 && this.status === 200 || this.status === 201) {
         const conversion = JSON.parse(this.responseText)
-        console.log(conversion)
+        //console.log(conversion)
+        
+        
 
         if (conversion.Response === 'False') {
             alert("Se ha producido un error en la llamada" + respuesta.mensaje)
             return
         }
 
-        const conversiones = 
+        
+    
+            cantidad_to_euros = conversion.data.quote["EUR"].price
+            valorEurTo.push(cantidad_to_euros)
+           
+    } 
+        //console.log(valorEurTo)
 
-        var valorEur = []
-        conversiones.forEach(function (a) {
-            if (!this[a.conversiones.data.quote("EUR")]) {
-                this[a.conversiones.data.quote("EUR")] = { EUR: a.conversiones.data.quote("EUR"), valor: 0 };
-                valorEur.push(this[a.conversiones.data.quote("EUR")]);
+
+    sumavalorEurTo = 0
+    valorEurTo.forEach (function(valor){
+    sumavalorEurTo+=valor
+    })
+        //console.log(sumavalorEurTo)
+
+}    
+var valorEurFrom = []   
+function valorCantidadesFromEnEuros(){
+    if (this.readyState === 4 && this.status === 200 || this.status === 201) {
+        const conversion = JSON.parse(this.responseText)
+        console.log(conversion)
+             
+        
+        if (conversion.Response === 'False') {
+            alert("Se ha producido un error en la llamada" + respuesta.mensaje)
+            return
         }
-            this[a.conversiones.data.quote("EUR")].price += a.valor   
-        }, [])
-        
-        //const conversionTo = conversion.sumaCantidadesTo
-        
-        //const valorCantidadTo = conversion.sumaCantidadesTo
-        //console.log(valorCantidadTo)
+        cantidad_from_euros = conversion.data.quote["EUR"].price
+        valorEurFrom.push(cantidad_from_euros) 
+    }    
+           
+    sumavalorEurFrom = 0
+    valorEurFrom.forEach (function(valor){
+    sumavalorEurFrom+=valor
+    })
+    //console.log(sumavalorEurFrom)
 
-        //valorCantidadTo.moneda_to = document.querySelector("#moneda_to").value
-        //cantidad_to_euros = conversion.data.quote[valorCantidadTo.moneda_to].price
-        //document.getElementById('valor_actual').value=cantidad_to_euros.toFixed(2)
-        //if (llamada.moneda_to === "EUR") {
-            //document.getElementById('cantidad_resultante').value=cantidad_resultante.toFixed(2)
-        }
-        
-  
-    }
-
-
-
-  
+} 
 
 
 window.onload = function() { 
@@ -528,8 +563,6 @@ window.onload = function() {
     document.querySelector("#comprar")
         .addEventListener("click", grabaCompra)
 
-    //document.querySelector("#cancelar")
-        //.addEventListener("click", llamaApiPrecios)
 
     document.querySelector("#actualizar")
         .addEventListener("click", actualizaStatus)

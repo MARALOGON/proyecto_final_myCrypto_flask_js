@@ -21,6 +21,20 @@ def listaMovimientos():
     
     return render_template('spa_crypto.html')
 
+    """
+    query = "SELECT * FROM movimientos_crypto ORDER BY fecha"
+    movimientos = dbManager.consultaMuchasSQL(query)
+    
+    saldoEurFrom = 0
+    for d in movimientos:
+        if d['moneda_from'] == "EUR":
+            saldoEurFrom = saldoEurFrom + d["cantidad_inicial"]
+        d['saldoEur'] = saldoEurFrom
+
+    print(saldoEurFrom)
+    """
+    
+
 @app.route('/api/v1/saldos')
 def saldosCrypto():
     #query = "SELECT moneda_to, moneda_from, cantidad_resultante - SUM(cantidad_inicial) AS total_saldos FROM movimientos_crypto WHERE moneda_to = moneda_from GROUP BY moneda_to"SUM(cantidad_inicial) AS total_saldos_from FROM movimientos_crypto GROUP BY moneda_from
@@ -39,13 +53,20 @@ def saldosCrypto():
 @app.route('/api/v1/movimientos')
 def movimientosAPI():
     query = "SELECT * FROM movimientos_crypto ORDER BY fecha"
-   
+
     try:
         lista = dbManager.consultaMuchasSQL(query) 
         return jsonify({'status': 'success', 'movimientos_crypto':lista})
 
     except sqlite3.Error as e:
         return jsonify({'status': 'fail', 'mensaje': str(e)})
+
+
+    
+
+
+
+
 
 @app.route('/api/v1/movimiento/<int:id>', methods=['GET'])
 @app.route('/api/v1/movimiento', methods=['POST'])
@@ -68,7 +89,7 @@ def muestraMovimientoId(id=None):
         if request.method == 'POST':
             datos = request.json
             datos["fecha"] = ahora.strftime("%Y-%m-%d")
-            datos["hora"] = ahora.strftime("%H:%S:%M")
+            datos["hora"] = ahora.strftime("%H:%M:%S")
             #datos["fecha"] = int(fecha)
             #datos["hora"] = int(hora)
             #Aqui hay que validar lo siguiente:
