@@ -23,6 +23,9 @@ const criptomonedas = {
 }
 
 let losSaldos = {}
+//var sumavalorEurFrom = 0
+//var sumavalorEurTo = 0
+
 //var sumaCantidadesTo
 //const movimientos = movimientos_crypto
 var cantidadFromValidada = false
@@ -346,7 +349,7 @@ function grabaCompra (ev) {
     
 
 
-
+var total_invertido_euros
 function sumaEurosInvertidos() {
     if (this.readyState === 4 && this.status === 200) {       
         const respuesta = JSON.parse(this.responseText) 
@@ -377,6 +380,7 @@ function sumaEurosInvertidos() {
     }
     total_invertido_euros=sumaEurosFrom.EUR
     document.getElementById('total_invertido').value=total_invertido_euros
+    sumaToFrom()
 
     var sumaCantidadesTo = []
     movimientos.forEach(function (a) {
@@ -401,7 +405,7 @@ function sumaEurosInvertidos() {
         xhr5.send()
     
     }
-    console.log(sumaCantidadesTo)
+    //console.log(sumaCantidadesTo)
 
     var sumaCantidadesFrom = []
     movimientos.forEach(function (a) {
@@ -424,7 +428,7 @@ function sumaEurosInvertidos() {
         xhr5.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
         xhr5.send()
     }
-    console.log(sumaCantidadesFrom)
+    //console.log(sumaCantidadesFrom)
 
     const saldosCrypto =[]
     sumaCantidadesTo.filter((t) => {
@@ -440,7 +444,7 @@ function sumaEurosInvertidos() {
 
     })
     
-    console.log(saldosCrypto)
+    //console.log(saldosCrypto)
     }
    
 
@@ -484,16 +488,8 @@ function sumaEurosInvertidos() {
     
     
 
-
-function actualizaStatus(){
-    xhr3 = new XMLHttpRequest() 
-    xhr3.onload = sumaEurosInvertidos
-    xhr3.open('GET', `http://localhost:5000/api/v1/movimientos`, true) 
-    xhr3.send()
-}
-
-
 var valorEurTo = []
+var sumavalorEurTo
 function valorCantidadesToEnEuros(){
     
     if (this.readyState === 4 && this.status === 200 || this.status === 201) {
@@ -516,14 +512,20 @@ function valorCantidadesToEnEuros(){
         //console.log(valorEurTo)
 
 
+    
     sumavalorEurTo = 0
     valorEurTo.forEach (function(valor){
     sumavalorEurTo+=valor
     })
-        //console.log(sumavalorEurTo)
+    console.log(sumavalorEurTo)
+    sumaToFrom()
+
+
 
 }    
-var valorEurFrom = []   
+
+var valorEurFrom = [] 
+var sumavalorEurFrom
 function valorCantidadesFromEnEuros(){
     if (this.readyState === 4 && this.status === 200 || this.status === 201) {
         const conversion = JSON.parse(this.responseText)
@@ -538,14 +540,37 @@ function valorCantidadesFromEnEuros(){
         valorEurFrom.push(cantidad_from_euros) 
     }    
            
-    sumavalorEurFrom = 0
+    sumavalorEurFrom = 0 
     valorEurFrom.forEach (function(valor){
     sumavalorEurFrom+=valor
     })
-    //console.log(sumavalorEurFrom)
+    console.log(sumavalorEurFrom)
+    sumaToFrom()
 
 } 
 
+
+function actualizaStatus(){
+    xhr3 = new XMLHttpRequest() 
+    xhr3.onload = sumaEurosInvertidos
+    xhr3.open('GET', `http://localhost:5000/api/v1/movimientos`, true) 
+    xhr3.send()
+
+
+}
+
+function sumaToFrom(){
+    var localFrom = sumavalorEurFrom
+    var localTo = sumavalorEurTo
+    valorActual = localTo - localFrom
+    document.getElementById('valor_actual').value=valorActual.toFixed(2)
+
+
+    var localEurosInvertidos = total_invertido_euros
+    beneficioObtenido = valorActual - localEurosInvertidos
+    document.getElementById('beneficio_obtenido').value=beneficioObtenido.toFixed(2)
+
+}
 
 window.onload = function() { 
     llamaApiMovimientos() 
@@ -554,7 +579,9 @@ window.onload = function() {
 
     actualizaStatus()
 
-    
+    valorCantidadesFromEnEuros()
+
+    valorCantidadesToEnEuros()
 
     document.querySelector("#convertir")
         .addEventListener("click", llamaApiPrecios)
