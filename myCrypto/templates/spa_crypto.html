@@ -56,14 +56,14 @@
                         <h3 class="title is-3">Estado de la inversión</h3>
                         <label class="label is-size-5 mb-4">Euros invertidos:</label>
                         <input class="input is-normal" type="number" name="total_invertido" id="total_invertido" readonly>
-                        <label class="label is-size-5 mb-4">Valor actual de la inversión (€):</label>
+                        <label class="label is-size-5 mb-4" style="margin-top: 15px">Valor actual de la inversión (€):</label>
                         <input class="input is-normal" type="number" name="valor_actual" id="valor_actual" readonly>
-                        <label class="label is-size-5 mb-4">Beneficio obtenido (€):</label>
-                        <input class="input is-normal" type="number" name="beneficio_obtenido" id="beneficio_obtenido" readonly>
+                        <label class="label is-size-5 mb-4" style="margin-top: 15px">Beneficio obtenido (€):</label>
+                        <input class="input is-normal" type="number" name="beneficio_obtenido" id="beneficio_obtenido" readonly>   
                         
-                    </br> 
+                    
                         <div>
-                            <button class="button is-success is-hovered is-focused" id="actualizar" >Actualizar</button><br/>
+                            <button class="button is-success is-hovered is-focused" style="margin-top: 30px" id="actualizar" >Actualizar</button><br/>
                         </div>
                     
                     </form>
@@ -151,8 +151,8 @@
                                     <option value="TRX">Tron(TRX)</option>
                                 </select>
                             </div>  
-                            <label class="label" for="cantidad_inicial">Cantidad inicial</label>
-                            <input class="input is-normal" type="number" name="cantidad_inicial" id="cantidad_inicial" placeholder="0"> 
+                            <label class="label" for="cantidad_inicial" style="margin-top: 15px">Cantidad inicial</label>
+                            <input class="input is-normal" type="number" name="cantidad_inicial" id="cantidad_inicial" placeholder="0" step="any"> 
                         
                         <!--</div> -->
                     </div>
@@ -183,7 +183,7 @@
                                 <option value="TRX">Tron(TRX)</option>
                             </select>
                         </div>
-                        <label class="label" for="cantidad_resultante">Cantidad resultante</label>
+                        <label class="label" for="cantidad_resultante" style="margin-top: 15px">Cantidad resultante</label>
                         <input class="input is-normal" type="number" name="cantidad_resultante" id="cantidad_resultante" readonly>
                     </div> 
                     
@@ -194,7 +194,7 @@
             <div class="row">
                 <div class="column"></div>
                     <div class="control">
-                    <button class="button is-info is-hovered is-focused pr-4" id="convertir">Convertir</button>
+                    <button class="button is-info is-hovered is-focused pr-4" style="margin-right: 556px"id="convertir">Convertir</button>
                     
                     <button class="button is-pulled-center is-success is-hovered is-focused" name="comprar" id="comprar" type="submit">Comprar</button>
                       
