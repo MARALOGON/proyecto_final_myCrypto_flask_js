@@ -81,7 +81,7 @@ function llamaApiMovimientos() {
     xhr.send()
 }
 
-function listaSaldos() {
+/*function listaSaldos() {
     if (this.readyState === 4 && this.status === 200) {   
         const respuesta = JSON.parse(this.responseText) 
         
@@ -96,7 +96,10 @@ function listaSaldos() {
         const myList = document.createElement('ul')
         var monedas_to = movimientos[i].moneda_to
         var monedas_from = movimientos[i].moneda_from
-        saldos_to = movimientos[i].moneda_to[cantidad_resultante] - movimientos[i].cantidad_inicial
+        if (monedas_to === monedas_from) {
+            saldos_to = movimientos[i].cantidad_resultante - movimientos[i].cantidad_inicial
+        }
+        
         
         var cantidades_to = {}
 
@@ -129,7 +132,7 @@ function listaSaldos() {
 
     }
 
-}
+}*/
 
 
 
@@ -367,6 +370,7 @@ function sumaEurosInvertidos() {
 
     var sumaEurosFrom = {}
     var sumaEurosTo = {}
+    
     for(let clave of movimientos) {
         
         if(!sumaEurosFrom[clave.moneda_from]) {
@@ -391,6 +395,8 @@ function sumaEurosInvertidos() {
     sumaToFrom()
 
     
+
+
 
 
     var sumaCantidadesTo = []
@@ -420,7 +426,7 @@ function sumaEurosInvertidos() {
         xhr5.send()
         }
     }
-    //console.log(sumaCantidadesTo)
+    console.log(sumaCantidadesTo)
 
     var sumaCantidadesFrom = []
     movimientos.forEach(function (a) {
@@ -449,32 +455,158 @@ function sumaEurosInvertidos() {
         xhr5.send()
         }
     }
-    //console.log(sumaCantidadesFrom)
+    console.log(sumaCantidadesFrom)
 
-    /*const saldosCrypto =[]
+    //****** 1er METODO : NO LO CONSIGO ***********
+
+    /*const saldosCrypto = movimientos.reduce((p,c)=>{
+        if(c.moneda_to in p && c.moneda_from in p){
+            p[c.moneda_to] += c.cantidad_resultante - c.cantidad_inicial
+        } else {
+            p[c.moneda_to] = c.cantidad_resultante
+        }
+        return p
+
+    }, {})
+    
+    console.log(saldosCrypto)*/
+
+    //****** 2do METODO : NO LO CONSIGO ***********
+
+    /*var SaldosCryptoTo = sumaCantidadesTo.map(function(obj){
+        var rObj = {}
+        rObj[obj.moneda] = obj.cantidad_resultante
+        return rObj
+     })
+    
+     var SaldosCryptoFrom = sumaCantidadesFrom.map(function(obj){
+        var rObj = {}
+        rObj[obj.moneda] = obj.cantidad_inicial
+        return rObj
+     })*/
+   
+    //const saldosCrypto = []
+
+
+    const saldosCryptoToFrom = [sumaCantidadesTo.concat(sumaCantidadesFrom)]
+    console.log(saldosCryptoToFrom)
+
+    
+    //****** 3ER METODO : NO LO CONSIGO ***********
+
+    /*var saldosCrypto = []
+    saldosCryptoToFrom.reduce(function(registro, valor) {
+        if (!registro[valor.moneda]) {
+            registro[valor.moneda] = {moneda: valor.moneda, cantidad_inicial: 0, cantidad_resultante: 0 }
+            saldosCrypto.push(registro[valor.moneda])
+        }
+        registro[valor.moneda].cantidad_inicial = valor.cantidad_inicial
+        registro[valor.moneda].cantidad_resultante = valor.cantidad_resultante
+        //if(!registro[valor.moneda].cantidad_inicial){
+
+        //}
+        return registro
+    }, {});*/
+
+    //console.log(saldosCrypto)
+
+    //****** 4o METODO : NO LO CONSIGO ***********
+    
+    /*saldosCryptoToFrom.forEach(function (a) {
+        
+        
+        if (!saldosCrypto[a.moneda]) {
+            saldosCrypto[a.moneda] = { moneda: a.moneda, cantidad: 0 };
+            saldosCrypto.push(saldosCrypto[a.moneda]);
+        }
+       
+        saldosCrypto[a.moneda].cantidad = a.cantidad_resultante - a.cantidad_inicial;
+        if (!saldosCrypto[a.moneda].cantidad_inicial) {
+            saldosCrypto[a.moneda].cantidad = a.cantidad_resultante
+        }
+
+    
+    }, []);*/
+    
+    
+    console.log(saldosCrypto)
+
+
+    //****** 5o METODO : NO LO CONSIGO ***********
+
+    /*var saldosCrypto = function (array, prop) {
+        return array.reduce(function(claves, items){
+            var valores = items[prop]
+            claves[valores] = claves[valores] || {moneda:items.moneda, cantidad_inicial:"", cantidad_resultante: "", cantidad: ""}
+            claves[valores].cantidad_inicial += items.cantidad_inicial
+            claves[valores].cantidad_resultante += items.cantidad_resultante
+            //claves[valores].cantidad = claves[valores].cantidad_inicial - claves[valores].cantidad_resultante
+            return claves
+        }, {})
+    }
+    console.log(saldosCrypto(saldosCryptoToFrom))*/
+    
+
+    //****** 6o METODO : CONSIGO HACER UN ARRAY CON LOS SALDOS TOTALES (CANTIDAD_TO - CANTIDAD_FROM) DE LAS MONEDAS QUE ESTAN REPETIDAS EN MONEDA_FROM Y MONEDA_TO, PERO NO CONSIGO INCLUIR LAS QUE SOLO ESTAN EN MONEDA_TO***********
+
+    const saldosCryptoIguales = []
+    //const saldosCryptoUnicas = sumaCantidadesTo.filter(t => !saldosCryptoIguales.includes(t))
+
     sumaCantidadesTo.filter((t) => {
         sumaCantidadesFrom.filter((f) => {
-            if(t.moneda_to === f.moneda_from){
-                (t.cantidad_resultante - f.cantidad_inicial)
-                saldosCrypto.push(t)
+            if(t.moneda === f.moneda){
+                saldo = t.cantidad_resultante - f.cantidad_inicial
+                saldosCryptoIguales.push({moneda:f.moneda, cantidad: saldo})
+            } 
+            if(t.moneda && !f.moneda){
+                saldo = t.cantidad_resultante 
+                saldosCryptoIguales.push({moneda:t.moneda, cantidad: saldo})
+
             }
 
-
+            //console.log(saldosCryptoIguales)
+            //console.log(saldosCryptoUnicas)
         })
 
+    //****** 7o METODO : CONSIGO HACER UN ARRAY CON LOS SALDOS TO Y FROM DE LAS MONEDAS QUE ESTAN REPETIDAS EN MONEDA_FROM Y MONEDA_TO, PERO NO CONSIGO INCLUIR LAS QUE SOLO ESTAN EN MONEDA_TO***********
 
-    })*/
-    
-    //console.log(saldosCrypto)
+        const saldosCryptoIguales = []
+        const saldosCryptoUnicas = sumaCantidadesTo.filter(t => !saldosCryptoIguales.includes(t))
+
+        sumaCantidadesTo.filter((t) => {
+            sumaCantidadesFrom.filter((f) => {
+            if(t.moneda === f.moneda){
+                cantidad_resultante = t.cantidad_resultante  
+                cantidad_inicial = f.cantidad_inicial
+                saldosCryptoIguales.push({moneda:f.moneda, cantidad_resultante: cantidad_resultante, cantidad_inicial: cantidad_inicial })
+            } 
+            if(t.moneda ){
+                cantidad_resultante = t.cantidad_resultante 
+                cantidad_inicial = 0
+                saldosCryptoIguales.push({moneda:t.moneda, cantidad_resultante: cantidad_resultante, cantidad_inicial: cantidad_inicial})
+
+            }
+
+        })
+        console.log(saldosCryptoIguales)
+        console.log(saldosCryptoUnicas)
+    })
+
+
     }
+
+
+    }
+
+}
    
 
-    
+
 
     
     
     
-}
+
 
         
 
@@ -485,27 +617,8 @@ function sumaEurosInvertidos() {
     
 
     
-/*function saldosCrypto(){
-// 1. Con este bloque consigo agrupar los saldos de moneda_to en forma de objeto, siendo la clave la moneda y el valor la suma de las cantidades_to correspondientes a esa moneda. Ejemplo {ETH:0.2, BTC:0.01}
-    // pero no he conseguido hacer la llamada a API CMC con ello
-
-    var sumaCantidadesTo = []
-    for(let clave of movimientos) {
-
-        if(!sumaCantidadesTo[clave.moneda_to]) {
-            sumaCantidadesTo[clave.moneda_to] = 0
-        }
-        if (clave.moneda_to in criptomonedas) {
-            sumaCantidadesTo[clave.moneda_to] += clave.cantidad_resultante
-        }
-
-        }
-    console.log(sumaCantidadesTo)
 
 
-}*/  
-
-    
     
     
 
@@ -598,7 +711,7 @@ function sumaToFrom(){
 window.onload = function() { 
     llamaApiMovimientos() 
 
-    llamaApiSaldos()
+    //llamaApiSaldos()
 
     actualizaStatus()
 

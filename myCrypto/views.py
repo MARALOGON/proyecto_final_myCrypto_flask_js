@@ -20,25 +20,13 @@ dbManager = DBmanager(app.config.get('DATABASE'))
 def listaMovimientos():
     
     return render_template('spa_crypto.html')
-
-    """
-    query = "SELECT * FROM movimientos_crypto ORDER BY fecha"
-    movimientos = dbManager.consultaMuchasSQL(query)
-    
-    saldoEurFrom = 0
-    for d in movimientos:
-        if d['moneda_from'] == "EUR":
-            saldoEurFrom = saldoEurFrom + d["cantidad_inicial"]
-        d['saldoEur'] = saldoEurFrom
-
-    print(saldoEurFrom)
-    """
     
 
 @app.route('/api/v1/saldos')
 def saldosCrypto():
     #query = "SELECT moneda_to, moneda_from, cantidad_resultante - SUM(cantidad_inicial) AS total_saldos FROM movimientos_crypto WHERE moneda_to = moneda_from GROUP BY moneda_to"SUM(cantidad_inicial) AS total_saldos_from FROM movimientos_crypto GROUP BY moneda_from
     query = "SELECT moneda_to, moneda_from, SUM(cantidad_resultante) AS total_saldos_to, SUM(cantidad_inicial) AS total_saldos_from FROM movimientos_crypto GROUP BY moneda_from "
+    
 
     try:
         saldos = dbManager.consultaMuchasSQL(query)
@@ -47,7 +35,7 @@ def saldosCrypto():
     except sqlite3.Error as e:
         return jsonify({'status': 'fail', 'mensaje': str(e)})
     
-        
+    
 
 
 @app.route('/api/v1/movimientos')
@@ -61,8 +49,7 @@ def movimientosAPI():
     except sqlite3.Error as e:
         return jsonify({'status': 'fail', 'mensaje': str(e)})
 
-
-    
+        
 
 
 
@@ -72,8 +59,6 @@ def movimientosAPI():
 @app.route('/api/v1/movimiento', methods=['POST'])
 def muestraMovimientoId(id=None):
     ahora = datetime.now()
-    #fecha = date()
-    #hora = time()
     movimiento = dbManager.consultaUnaSQL("SELECT * FROM movimientos_crypto WHERE id = ?", [id])
     try:
         if request.method == 'GET':
@@ -90,8 +75,7 @@ def muestraMovimientoId(id=None):
             datos = request.json
             datos["fecha"] = ahora.strftime("%Y-%m-%d")
             datos["hora"] = ahora.strftime("%H:%M:%S")
-            #datos["fecha"] = int(fecha)
-            #datos["hora"] = int(hora)
+
             #Aqui hay que validar lo siguiente:
             #1. Que moneda_from y moneda_to son distintas
             #2. Que de cantidad_from en criptos hay saldo suficiente
