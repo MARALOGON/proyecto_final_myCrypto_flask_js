@@ -457,20 +457,36 @@ function sumaEurosInvertidos() {
     }
     console.log(sumaCantidadesFrom)
 
+
+    let saldosCryptoUnicas = sumaCantidadesTo.filter(
+        (moneda_to) => {
+          let moneda = true
+          for (let i = 0; i < sumaCantidadesFrom.length && moneda; i++) { 
+            let moneda_from = sumaCantidadesFrom[i]
+            if (moneda_from['moneda'] == moneda_to['moneda'])
+              moneda = false
+          }
+          return moneda
+      })
+      
+      console.log(saldosCryptoUnicas)
+
     //****** 1er METODO : NO LO CONSIGO ***********
 
     /*const saldosCrypto = movimientos.reduce((p,c)=>{
-        if(c.moneda_to in p && c.moneda_from in p){
+    
+            if(c.moneda_to in p && c.moneda_from in p){
             p[c.moneda_to] += c.cantidad_resultante - c.cantidad_inicial
-        } else {
+            } else {
             p[c.moneda_to] = c.cantidad_resultante
-        }
-        return p
-
+            }
+            return p
+      
     }, {})
     
-    console.log(saldosCrypto)*/
+    console.log(saldosCrypto)
 
+    
     //****** 2do METODO : NO LO CONSIGO ***********
 
     /*var SaldosCryptoTo = sumaCantidadesTo.map(function(obj){
@@ -488,8 +504,8 @@ function sumaEurosInvertidos() {
     //const saldosCrypto = []
 
 
-    const saldosCryptoToFrom = [sumaCantidadesTo.concat(sumaCantidadesFrom)]
-    console.log(saldosCryptoToFrom)
+    //const saldosCryptoToFrom = [sumaCantidadesTo.concat(sumaCantidadesFrom)]
+    //console.log(saldosCryptoToFrom)
 
     
     //****** 3ER METODO : NO LO CONSIGO ***********
@@ -529,7 +545,7 @@ function sumaEurosInvertidos() {
     }, []);*/
     
     
-    console.log(saldosCrypto)
+    //console.log(saldosCrypto)
 
 
     //****** 5o METODO : NO LO CONSIGO ***********
@@ -547,33 +563,34 @@ function sumaEurosInvertidos() {
     console.log(saldosCrypto(saldosCryptoToFrom))*/
     
 
-    //****** 6o METODO : CONSIGO HACER UN ARRAY CON LOS SALDOS TOTALES (CANTIDAD_TO - CANTIDAD_FROM) DE LAS MONEDAS QUE ESTAN REPETIDAS EN MONEDA_FROM Y MONEDA_TO, PERO NO CONSIGO INCLUIR LAS QUE SOLO ESTAN EN MONEDA_TO***********
-
+    //****** 6o METODO : EN EL QUE MAS ME HE ACERCADO A LA SOLUCION. CONSIGO HACER UN ARRAY CON LOS SALDOS TOTALES (CANTIDAD_TO - CANTIDAD_FROM) DE LAS MONEDAS QUE ESTAN REPETIDAS EN MONEDA_FROM Y MONEDA_TO, PERO NO CONSIGO INCLUIR LAS QUE SOLO ESTAN EN MONEDA_TO***********
+    
     const saldosCryptoIguales = []
-    //const saldosCryptoUnicas = sumaCantidadesTo.filter(t => !saldosCryptoIguales.includes(t))
+    //const saldosCryptoUnicas = saldosCryptoToFrom.filter(saldo => !saldo.cantidad_inicial)
 
     sumaCantidadesTo.filter((t) => {
         sumaCantidadesFrom.filter((f) => {
             if(t.moneda === f.moneda){
                 saldo = t.cantidad_resultante - f.cantidad_inicial
-                saldosCryptoIguales.push({moneda:f.moneda, cantidad: saldo})
+                saldosCryptoIguales.push({moneda:f.moneda, cantidad_resultante: saldo})
             } 
-            if(t.moneda && !f.moneda){
-                saldo = t.cantidad_resultante 
-                saldosCryptoIguales.push({moneda:t.moneda, cantidad: saldo})
+            //if(t.moneda.value && !f.moneda.value){
+                //saldo = t.cantidad_resultante 
+                //saldosCryptoIguales.push({moneda:t.moneda, cantidad: saldo})
 
-            }
+            //}
 
-            //console.log(saldosCryptoIguales)
-            //console.log(saldosCryptoUnicas)
+            console.log(saldosCryptoIguales)
+            const saldosCrypto= [saldosCryptoIguales.concat(saldosCryptoUnicas)]
+            console.log(saldosCrypto)
         })
 
     //****** 7o METODO : CONSIGO HACER UN ARRAY CON LOS SALDOS TO Y FROM DE LAS MONEDAS QUE ESTAN REPETIDAS EN MONEDA_FROM Y MONEDA_TO, PERO NO CONSIGO INCLUIR LAS QUE SOLO ESTAN EN MONEDA_TO***********
 
-        const saldosCryptoIguales = []
-        const saldosCryptoUnicas = sumaCantidadesTo.filter(t => !saldosCryptoIguales.includes(t))
+        //const saldosCryptoIguales = []
+        //const saldosCryptoUnicas = sumaCantidadesTo.filter(t => !saldosCryptoIguales.includes(t))
 
-        sumaCantidadesTo.filter((t) => {
+        /*sumaCantidadesTo.filter((t) => {
             sumaCantidadesFrom.filter((f) => {
             if(t.moneda === f.moneda){
                 cantidad_resultante = t.cantidad_resultante  
@@ -590,37 +607,24 @@ function sumaEurosInvertidos() {
         })
         console.log(saldosCryptoIguales)
         console.log(saldosCryptoUnicas)
+    })*/
+
+
     })
 
-
-    }
-
-
+    
     }
 
 }
+
+
+
    
 
 
 
     
-    
-    
-
-
-        
-
-    
-    
-        
-
-    
-
-    
-
-
-    
-    
+  
 
 var valorEurTo = []
 var sumavalorEurTo

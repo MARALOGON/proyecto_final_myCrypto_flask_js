@@ -45,6 +45,8 @@ def movimientosAPI():
     try:
         lista = dbManager.consultaMuchasSQL(query) 
         return jsonify({'status': 'success', 'movimientos_crypto':lista})
+       
+
 
     except sqlite3.Error as e:
         return jsonify({'status': 'fail', 'mensaje': str(e)})
