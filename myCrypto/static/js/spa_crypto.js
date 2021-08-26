@@ -72,8 +72,6 @@ function listaMovimientos() {
 
 
 
-
-
 function llamaApiMovimientos() { 
     xhr = new XMLHttpRequest() 
     xhr.onload = listaMovimientos 
@@ -81,58 +79,9 @@ function llamaApiMovimientos() {
     xhr.send()
 }
 
-/*function listaSaldos() {
-    if (this.readyState === 4 && this.status === 200) {   
-        const respuesta = JSON.parse(this.responseText) 
-        
-        
-        if (respuesta.status !== "success") {
-            alert("Se ha producido un error en la consulta de saldos")
-            return
-        }
-    
-    const movimientos = respuesta.movimientos_crypto
-    for (var i=0; i < respuesta.movimientos_crypto.length; i++) { 
-        const myList = document.createElement('ul')
-        var monedas_to = movimientos[i].moneda_to
-        var monedas_from = movimientos[i].moneda_from
-        if (monedas_to === monedas_from) {
-            saldos_to = movimientos[i].cantidad_resultante - movimientos[i].cantidad_inicial
-        }
-        
-        
-        var cantidades_to = {}
 
-        for (const moneda of movimientos) {
-            if (cantidades_to[moneda]) {
-                cantidades_to[moneda] += cantidad_resultante
-            } 
-            //console.log(cantidades_to)
-            
-        }
-        
-
-        for (var x = 0; x < monedas_to.length; x++) {
-            const listItem = document.createElement('li')
-            listItem.textContent = monedas_to[x]
-            myList.appendChild(listItem)
-        }
-        console.log(monedas_to)
-
-        for (var y = 0; y < saldos_to.length; y++) {
-            const listItem = document.createElement('li')
-            listItem.textContent = saldos_to[y]
-            myList.appendChild(listItem)
-        }
-        console.log(saldos_to)
-        console.log(cantidades_to)
-    }
         
     
-
-    }
-
-}*/
 
 
 
@@ -212,9 +161,17 @@ function validarCompra() {
     var moneda_to_oculta = document.getElementById("moneda_to_oculta").value;
     var moneda_from = document.getElementById("moneda_from").value;
     var moneda_from_oculta = document.getElementById("moneda_from_oculta").value;
+    var localSaldosCrypto = saldosCrypto
+    
+    
+    for (let i=0; i<localSaldosCrypto.length; i++){
 
-    
-    
+        if(moneda_from === localSaldosCrypto[i].moneda && cantidad_inicial > localSaldosCrypto[i].cantidad_resultante){
+        swal("Error", "No puedes vender un importe superior a tu saldo disponible", "error")
+        document.getElementById("cantidad_inicial").focus()
+        return false
+        }
+    }
 
     if (cantidad_inicial != cantidad_inicial_oculta) {
         swal("Error", "No puedes modificar el importe a convertir si quieres hacer la compra", "error")
@@ -355,6 +312,7 @@ function grabaCompra (ev) {
 
 var saldo_euros
 var total_invertido_euros
+var saldosCrypto
 function sumaEurosInvertidos() {
     if (this.readyState === 4 && this.status === 200) {       
         const respuesta = JSON.parse(this.responseText) 
@@ -426,7 +384,7 @@ function sumaEurosInvertidos() {
         xhr5.send()
         }
     }
-    console.log(sumaCantidadesTo)
+
 
     var sumaCantidadesFrom = []
     movimientos.forEach(function (a) {
@@ -454,120 +412,29 @@ function sumaEurosInvertidos() {
         xhr5.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
         xhr5.send()
         }
+    
+        console.log(sumaCantidadesFrom)
     }
-    console.log(sumaCantidadesFrom)
 
 
-    let saldosCryptoUnicas = sumaCantidadesTo.filter(
-        (moneda_to) => {
+
+    
+    let saldosCryptoUnicas = sumaCantidadesTo.filter((moneda_to) => {
           let moneda = true
           for (let i = 0; i < sumaCantidadesFrom.length && moneda; i++) { 
             let moneda_from = sumaCantidadesFrom[i]
             if (moneda_from['moneda'] == moneda_to['moneda'])
               moneda = false
           }
-          return moneda
+          return moneda 
       })
       
-      console.log(saldosCryptoUnicas)
-
-    //****** 1er METODO : NO LO CONSIGO ***********
-
-    /*const saldosCrypto = movimientos.reduce((p,c)=>{
-    
-            if(c.moneda_to in p && c.moneda_from in p){
-            p[c.moneda_to] += c.cantidad_resultante - c.cantidad_inicial
-            } else {
-            p[c.moneda_to] = c.cantidad_resultante
-            }
-            return p
+        console.log(saldosCryptoUnicas)
       
-    }, {})
+  
     
-    console.log(saldosCrypto)
-
+    var saldosCryptoIguales = []
     
-    //****** 2do METODO : NO LO CONSIGO ***********
-
-    /*var SaldosCryptoTo = sumaCantidadesTo.map(function(obj){
-        var rObj = {}
-        rObj[obj.moneda] = obj.cantidad_resultante
-        return rObj
-     })
-    
-     var SaldosCryptoFrom = sumaCantidadesFrom.map(function(obj){
-        var rObj = {}
-        rObj[obj.moneda] = obj.cantidad_inicial
-        return rObj
-     })*/
-   
-    //const saldosCrypto = []
-
-
-    //const saldosCryptoToFrom = [sumaCantidadesTo.concat(sumaCantidadesFrom)]
-    //console.log(saldosCryptoToFrom)
-
-    
-    //****** 3ER METODO : NO LO CONSIGO ***********
-
-    /*var saldosCrypto = []
-    saldosCryptoToFrom.reduce(function(registro, valor) {
-        if (!registro[valor.moneda]) {
-            registro[valor.moneda] = {moneda: valor.moneda, cantidad_inicial: 0, cantidad_resultante: 0 }
-            saldosCrypto.push(registro[valor.moneda])
-        }
-        registro[valor.moneda].cantidad_inicial = valor.cantidad_inicial
-        registro[valor.moneda].cantidad_resultante = valor.cantidad_resultante
-        //if(!registro[valor.moneda].cantidad_inicial){
-
-        //}
-        return registro
-    }, {});*/
-
-    //console.log(saldosCrypto)
-
-    //****** 4o METODO : NO LO CONSIGO ***********
-    
-    /*saldosCryptoToFrom.forEach(function (a) {
-        
-        
-        if (!saldosCrypto[a.moneda]) {
-            saldosCrypto[a.moneda] = { moneda: a.moneda, cantidad: 0 };
-            saldosCrypto.push(saldosCrypto[a.moneda]);
-        }
-       
-        saldosCrypto[a.moneda].cantidad = a.cantidad_resultante - a.cantidad_inicial;
-        if (!saldosCrypto[a.moneda].cantidad_inicial) {
-            saldosCrypto[a.moneda].cantidad = a.cantidad_resultante
-        }
-
-    
-    }, []);*/
-    
-    
-    //console.log(saldosCrypto)
-
-
-    //****** 5o METODO : NO LO CONSIGO ***********
-
-    /*var saldosCrypto = function (array, prop) {
-        return array.reduce(function(claves, items){
-            var valores = items[prop]
-            claves[valores] = claves[valores] || {moneda:items.moneda, cantidad_inicial:"", cantidad_resultante: "", cantidad: ""}
-            claves[valores].cantidad_inicial += items.cantidad_inicial
-            claves[valores].cantidad_resultante += items.cantidad_resultante
-            //claves[valores].cantidad = claves[valores].cantidad_inicial - claves[valores].cantidad_resultante
-            return claves
-        }, {})
-    }
-    console.log(saldosCrypto(saldosCryptoToFrom))*/
-    
-
-    //****** 6o METODO : EN EL QUE MAS ME HE ACERCADO A LA SOLUCION. CONSIGO HACER UN ARRAY CON LOS SALDOS TOTALES (CANTIDAD_TO - CANTIDAD_FROM) DE LAS MONEDAS QUE ESTAN REPETIDAS EN MONEDA_FROM Y MONEDA_TO, PERO NO CONSIGO INCLUIR LAS QUE SOLO ESTAN EN MONEDA_TO***********
-    
-    const saldosCryptoIguales = []
-    //const saldosCryptoUnicas = saldosCryptoToFrom.filter(saldo => !saldo.cantidad_inicial)
-
     sumaCantidadesTo.filter((t) => {
         sumaCantidadesFrom.filter((f) => {
             if(t.moneda === f.moneda){
@@ -579,52 +446,88 @@ function sumaEurosInvertidos() {
                 //saldosCryptoIguales.push({moneda:t.moneda, cantidad: saldo})
 
             //}
+            var eliminarEur = {moneda: "EUR", cantidad_resultante: 0}
+            saldosCryptoIguales = saldosCryptoIguales.filter((item)=>{
+                return item.moneda != eliminarEur.moneda && item.cantidad_resultante != eliminarEur.cantidad_resultante
+                })
 
             console.log(saldosCryptoIguales)
-            const saldosCrypto= [saldosCryptoIguales.concat(saldosCryptoUnicas)]
-            console.log(saldosCrypto)
+            
         })
 
-    //****** 7o METODO : CONSIGO HACER UN ARRAY CON LOS SALDOS TO Y FROM DE LAS MONEDAS QUE ESTAN REPETIDAS EN MONEDA_FROM Y MONEDA_TO, PERO NO CONSIGO INCLUIR LAS QUE SOLO ESTAN EN MONEDA_TO***********
+        
+        saldosCrypto = saldosCryptoIguales.concat(saldosCryptoUnicas)
+        listaSaldos()   
+        console.log(saldosCrypto)
 
-        //const saldosCryptoIguales = []
-        //const saldosCryptoUnicas = sumaCantidadesTo.filter(t => !saldosCryptoIguales.includes(t))
-
-        /*sumaCantidadesTo.filter((t) => {
-            sumaCantidadesFrom.filter((f) => {
-            if(t.moneda === f.moneda){
-                cantidad_resultante = t.cantidad_resultante  
-                cantidad_inicial = f.cantidad_inicial
-                saldosCryptoIguales.push({moneda:f.moneda, cantidad_resultante: cantidad_resultante, cantidad_inicial: cantidad_inicial })
-            } 
-            if(t.moneda ){
-                cantidad_resultante = t.cantidad_resultante 
-                cantidad_inicial = 0
-                saldosCryptoIguales.push({moneda:t.moneda, cantidad_resultante: cantidad_resultante, cantidad_inicial: cantidad_inicial})
-
-            }
 
         })
-        console.log(saldosCryptoIguales)
-        console.log(saldosCryptoUnicas)
-    })*/
-
-
-    })
-
+   
     
     }
 
 }
 
+function listaSaldos() {
+    /*if (this.readyState === 4 && this.status === 200) {   
+        const respuesta = JSON.parse(this.responseText) 
+        
+        
+        if (respuesta.status !== "success") {
+            alert("Se ha producido un error en la consulta de saldos")
+            return
+        }
+    
+    const movimientos = respuesta.movimientos_crypto
 
-
-   
-
-
+    var localSaldosCrypto = saldosCrypto
+    
+    for (var i=0; i < localSaldosCrypto.length; i++) { 
+        
+        const myList = document.createElement('ul')
+        var moneda = localSaldosCrypto[i].moneda
+        var saldo = localSaldosCrypto[i].cantidad_resultante
+        
+        for (var x = 0; x < moneda.length; x++) {
+            const listItem = document.createElement('li')
+            listItem.textContent = moneda[x]
+            myList.appendChild(listItem)
+        }
+            
+        
+        for (var y = 0; y < saldo.length; y++) {
+            const listItem = document.createElement('li')
+            listItem.textContent = saldo[y]
+            myList.appendChild(listItem)
+            }
+            
+    }
+        
+        console.log(moneda)
+        console.log(saldo)*/
 
     
-  
+    var localSaldosCrypto = saldosCrypto
+    
+    var lista = document.getElementById("ulListado") 
+    
+    localSaldosCrypto.forEach(function(data, index){
+
+    var linea = document.createElement("tr")    
+    var contenido = document.createTextNode(data.moneda + '  ' + data.cantidad_resultante)
+    lista.appendChild(linea)
+    linea.appendChild(contenido)
+    
+     })  
+
+}
+
+
+
+
+
+
+
 
 var valorEurTo = []
 var sumavalorEurTo
@@ -632,30 +535,24 @@ function valorCantidadesToEnEuros(){
     
     if (this.readyState === 4 && this.status === 200 || this.status === 201) {
         const conversion = JSON.parse(this.responseText)
-        //console.log(conversion)
-        
-        
+    
 
         if (conversion.Response === 'False') {
             alert("Se ha producido un error en la llamada" + respuesta.mensaje)
             return
         }
 
-        
     
             cantidad_to_euros = conversion.data.quote["EUR"].price
             valorEurTo.push(cantidad_to_euros)
            
     } 
-        //console.log(valorEurTo)
-
-
+        
     
     sumavalorEurTo = 0
     valorEurTo.forEach (function(valor){
-    sumavalorEurTo+=valor
+    sumavalorEurTo += valor
     })
-    console.log(sumavalorEurTo)
     sumaToFrom()
 
 
@@ -667,8 +564,6 @@ var sumavalorEurFrom
 function valorCantidadesFromEnEuros(){
     if (this.readyState === 4 && this.status === 200 || this.status === 201) {
         const conversion = JSON.parse(this.responseText)
-        //console.log(conversion)
-             
         
         if (conversion.Response === 'False') {
             alert("Se ha producido un error en la llamada" + respuesta.mensaje)
@@ -682,7 +577,6 @@ function valorCantidadesFromEnEuros(){
     valorEurFrom.forEach (function(valor){
     sumavalorEurFrom+=valor
     })
-    console.log(sumavalorEurFrom)
     sumaToFrom()
 
 } 
@@ -719,9 +613,10 @@ window.onload = function() {
 
     actualizaStatus()
 
-    //valorCantidadesFromEnEuros()
+    listaSaldos()
 
-    //valorCantidadesToEnEuros()
+    sumaEurosInvertidos()
+
 
     document.querySelector("#convertir")
         .addEventListener("click", llamaApiPrecios)
