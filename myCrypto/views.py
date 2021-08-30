@@ -21,19 +21,6 @@ def listaMovimientos():
     
     return render_template('spa_crypto.html')
     
-
-@app.route('/api/v1/saldos')
-def saldosCrypto():
-    #query = "SELECT moneda_to, moneda_from, cantidad_resultante - SUM(cantidad_inicial) AS total_saldos FROM movimientos_crypto WHERE moneda_to = moneda_from GROUP BY moneda_to"SUM(cantidad_inicial) AS total_saldos_from FROM movimientos_crypto GROUP BY moneda_from
-    query = "SELECT moneda_to, moneda_from, SUM(cantidad_resultante) AS total_saldos_to, SUM(cantidad_inicial) AS total_saldos_from FROM movimientos_crypto GROUP BY moneda_from "
-    
-
-    try:
-        saldos = dbManager.consultaMuchasSQL(query)
-        return jsonify({'status': 'success', 'movimientos_crypto':saldos})
-
-    except sqlite3.Error as e:
-        return jsonify({'status': 'fail', 'mensaje': str(e)})
     
     
 
@@ -77,9 +64,18 @@ def muestraMovimientoId(id=None):
             datos = request.json
             datos["fecha"] = ahora.strftime("%Y-%m-%d")
             datos["hora"] = ahora.strftime("%H:%M:%S")
+            if datos['moneda_from'] == datos['moneda_to']:
+                return jsonify({"status": "fail", "mensaje": "No puedes seleccionar la misma moneda en ambos campos"})
+            elif datos['cantidad_inicial'] <= "0":
+                return jsonify({"status": "fail", "mensaje": "Debes introducir un importe numérico positivo para convertir"})
+            elif datos['cantidad_inicial'] == "":
+                return jsonify({"status": "fail", "mensaje": "Debes introducir un importe numérico positivo para convertir"})
+            elif datos['cantidad_inicial'] > "1000000000000":
+                return jsonify({"status": "fail", "mensaje": "Debes introducir un importe menor de 1000000000000 para convertir"})
+
 
             #Aqui hay que validar lo siguiente:
-            #1. Que moneda_from y moneda_to son distintas
+            
             #2. Que de cantidad_from en criptos hay saldo suficiente
 
             dbManager.modificaTablaSQL("""
@@ -101,6 +97,6 @@ def muestraMovimientoId(id=None):
 @app.route('/api/v1/par/<_from>/<_to>/<quantity>')
 @app.route('/api/v1/par/<_from>/<_to>')
 def par(_from, _to, quantity = 1.0):
-    url = f"https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount={quantity}&symbol={_from}&convert={_to}&CMC_PRO_API_KEY=b7f76ab2-bc37-48e1-a6e4-132fbb70df02"
+    url = f"https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount={quantity}&symbol={_from}&convert={_to}&CMC_PRO_API_KEY=3f3a7477-49a2-498a-8601-49481c24454d"
     res = requests.get(url)
     return Response(res)

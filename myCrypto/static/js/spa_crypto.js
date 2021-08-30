@@ -22,36 +22,21 @@ const criptomonedas = {
 
 }
 
-let losSaldos = {}
-//var sumavalorEurFrom = 0
-//var sumavalorEurTo = 0
-
-//var sumaCantidadesTo
-//const movimientos = movimientos_crypto
-var cantidadFromValidada = false
-var cantdadToValidada = false
-//console.log(movimientos)
-
 
 
 function listaMovimientos() { 
     if (this.readyState === 4 && this.status === 200) {   
         const respuesta = JSON.parse(this.responseText) 
-        
-        
 
         if (respuesta.status !== "success") {
             alert("Error en la consulta de movimientos registrados")
             return
         }
 
-     
-
         for (let i=0; i < respuesta.movimientos_crypto.length; i++) { 
             const movimiento = respuesta.movimientos_crypto[i] 
             
             const fila = document.createElement("tr")
-
 
             const datos = `
                 <td>${movimiento.fecha}</td>
@@ -71,7 +56,6 @@ function listaMovimientos() {
 }
 
 
-
 function llamaApiMovimientos() { 
     xhr = new XMLHttpRequest() 
     xhr.onload = listaMovimientos 
@@ -80,32 +64,14 @@ function llamaApiMovimientos() {
 }
 
 
-        
-    
-
-
-
-function llamaApiSaldos(){
-    xhr4 = new XMLHttpRequest() 
-    xhr4.onload = listaSaldos
-    xhr4.open('GET', `http://localhost:5000/api/v1/movimientos`, true) 
-    xhr4.send()
-}
-
 function capturaFormCompra() { 
-    //var hoy = new Date()
-    //var hora_actual = new Date()
     const movimiento = {}
-    //movimiento.fecha = String(hoy.getFullYear()) + '-' + ("0" + (hoy.getMonth() + 1)).slice(-2) + '-' + ("0" + (hoy.getDate())).slice(-2)
-    //movimiento.hora = String("0" + (hora_actual.getHours())).slice(-2) + ':' + ("0" + (hora_actual.getMinutes())).slice(-2) + ':' + ("0" + (hora_actual.getSeconds())).slice(-2)
     movimiento.moneda_from = document.querySelector("#moneda_from").value 
     movimiento.cantidad_inicial = document.querySelector("#cantidad_inicial").value
-    //movimiento.cantidad_inicial_oculta = document.querySelector("#cantidad_inicial_oculta").value
     movimiento.moneda_to = document.querySelector("#moneda_to").value
     movimiento.cantidad_resultante = document.querySelector("#cantidad_resultante").value
    
     return movimiento 
-
 }
 
 
@@ -124,7 +90,6 @@ function validarConversion() {
         document.getElementById("cantidad_inicial").focus();
         return false
 
-   
     } else if (cantidad_inicial <= 0) {
         swal("Error", "Debes introducir un importe superior a 0 para convertir", "error")
         document.getElementById("cantidad_inicial").focus();
@@ -140,6 +105,7 @@ function validarConversion() {
    
 }
 
+
 /*function submitCheck() {
     
     var cantidad_inicial = document.getElementById("cantidad_inicial").value;
@@ -152,6 +118,7 @@ function validarConversion() {
       } 
   }*/
 
+
 function validarCompra() {
 
     var cantidad_inicial = document.getElementById("cantidad_inicial").value;
@@ -161,12 +128,12 @@ function validarCompra() {
     var moneda_to_oculta = document.getElementById("moneda_to_oculta").value;
     var moneda_from = document.getElementById("moneda_from").value;
     var moneda_from_oculta = document.getElementById("moneda_from_oculta").value;
-    var localSaldosCrypto = saldosCrypto
+    var localsaldosCryptoFinal = saldosCryptoFinal
     
     
-    for (let i=0; i<localSaldosCrypto.length; i++){
+    for (let i=0; i<localsaldosCryptoFinal.length; i++){
 
-        if(moneda_from === localSaldosCrypto[i].moneda && cantidad_inicial > localSaldosCrypto[i].cantidad_resultante){
+        if(moneda_from === localsaldosCryptoFinal[i].moneda && cantidad_inicial > localsaldosCryptoFinal[i].saldo){
         swal("Error", "No puedes vender un importe superior a tu saldo disponible", "error")
         document.getElementById("cantidad_inicial").focus()
         return false
@@ -206,10 +173,10 @@ function validarCompra() {
     return true
 }
 
+
 function llamaApiPrecios(ev) {
     ev.preventDefault()
    
-
     const llamada = {}
     llamada.moneda_from = document.querySelector("#moneda_from").value
     llamada.moneda_from_oculta = document.querySelector("#moneda_from").value
@@ -218,33 +185,19 @@ function llamaApiPrecios(ev) {
     llamada.moneda_to = document.querySelector("#moneda_to").value
     llamada.moneda_to_oculta = document.querySelector("#moneda_to").value
 
-    
-    console.log(llamada)
-
     document.querySelector("#cantidad_inicial_oculta").value = document.querySelector("#cantidad_inicial").value
     document.querySelector("#moneda_from_oculta").value = document.querySelector("#moneda_from").value
     document.querySelector("#moneda_to_oculta").value = document.querySelector("#moneda_to").value
-
 
     if (!validarConversion()) {
         return 
     }
 
-
     xhr2 = new XMLHttpRequest()
     xhr2.onload = RecibeApiConversion
-    
-    
     xhr2.open("GET", `http://localhost:5000/api/v1/par/${llamada.moneda_from}/${llamada.moneda_to}/${llamada.cantidad_inicial}`, true)
-
-   
     xhr2.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
     xhr2.send()
-        
-    console.log("petición lanzada")
-    
-
-   
 
 }
 
@@ -257,12 +210,8 @@ function RecibeApiConversion() {
             alert("Se ha producido un error en la llamada" + respuesta.mensaje)
             return
         }
-
-       
-        
-        
+   
         const llamada = {}
-
         llamada.moneda_to = document.querySelector("#moneda_to").value
         cantidad_resultante = conversion.data.quote[llamada.moneda_to].price
         document.getElementById('cantidad_resultante').value=cantidad_resultante
@@ -270,16 +219,10 @@ function RecibeApiConversion() {
             document.getElementById('cantidad_resultante').value=cantidad_resultante.toFixed(2)
         }
         
-  
-        
-
-        
-        //const tbody = document.querySelector(".table tbody")
-
-        
-
     }
+
 }
+
 
 function grabaCompra (ev) {
     ev.preventDefault()   
@@ -292,32 +235,23 @@ function grabaCompra (ev) {
 
     xhr.open("POST", `http://localhost:5000/api/v1/movimiento`, true)  
     xhr.onload = listaMovimientos 
-        
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8") 
-        
     xhr.send(JSON.stringify(compra))   
-
     swal("Bien!", "Compra realizada y registrada en base de datos con éxito", "success")
     
-    console.log("Compra realizada y registrada en base de datos")
-
     document.forms["form"].reset()
-
-   
 
 }
     
     
-
-
 var saldo_euros
 var total_invertido_euros
 var saldosCrypto
+
 function sumaEurosInvertidos() {
     if (this.readyState === 4 && this.status === 200) {       
         const respuesta = JSON.parse(this.responseText) 
         console.log(respuesta)
-        
         
         if (respuesta.status !== "success") {
             alert("Error en la consulta de movimientos registrados")
@@ -353,10 +287,6 @@ function sumaEurosInvertidos() {
     sumaToFrom()
 
     
-
-
-
-
     var sumaCantidadesTo = []
     movimientos.forEach(function (a) {
 
@@ -364,7 +294,6 @@ function sumaEurosInvertidos() {
             this[a.moneda_to] = { moneda: a.moneda_to, cantidad_resultante: 0 };
             sumaCantidadesTo.push(this[a.moneda_to]);
     }
-        
         if (a.moneda_to != "EUR") {
         this[a.moneda_to].cantidad_resultante += a.cantidad_resultante 
         }   
@@ -373,26 +302,24 @@ function sumaEurosInvertidos() {
 
     for(let i=0; i<sumaCantidadesTo.length; i++){
         if(sumaCantidadesTo[i].moneda != "EUR"){
+        
         xhr5 = new XMLHttpRequest()
         xhr5.onload = valorCantidadesToEnEuros
-    
-    
         xhr5.open("GET", `http://localhost:5000/api/v1/par/${sumaCantidadesTo[i].moneda}/EUR/${sumaCantidadesTo[i].cantidad_resultante}`, true)
-
-
         xhr5.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
         xhr5.send()
         }
+    
     }
 
 
     var sumaCantidadesFrom = []
-    movimientos.forEach(function (a) {
+    movimientos.forEach(function(a) {
 
         if (!this[a.moneda_from]) {
-            this[a.moneda_from] = { moneda: a.moneda_from, cantidad_inicial: 0 };
+            this[a.moneda_from] = {moneda: a.moneda_from, cantidad_inicial: 0 };
             sumaCantidadesFrom.push(this[a.moneda_from]);
-    }
+        }
 
         if (a.moneda_from != "EUR") {
         this[a.moneda_from].cantidad_inicial += a.cantidad_inicial
@@ -402,24 +329,17 @@ function sumaEurosInvertidos() {
 
     for(let i=0; i<sumaCantidadesFrom.length; i++){
         if(sumaCantidadesFrom[i].moneda != "EUR"){
+
         xhr5 = new XMLHttpRequest()
         xhr5.onload = valorCantidadesFromEnEuros
-    
-    
         xhr5.open("GET", `http://localhost:5000/api/v1/par/${sumaCantidadesFrom[i].moneda}/EUR/${sumaCantidadesFrom[i].cantidad_inicial}`, true)
-
-
         xhr5.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
         xhr5.send()
         }
     
-        console.log(sumaCantidadesFrom)
     }
 
-
-
-    
-    let saldosCryptoUnicas = sumaCantidadesTo.filter((moneda_to) => {
+    saldosCryptoUnicas = sumaCantidadesTo.filter((moneda_to) => {
           let moneda = true
           for (let i = 0; i < sumaCantidadesFrom.length && moneda; i++) { 
             let moneda_from = sumaCantidadesFrom[i]
@@ -429,101 +349,100 @@ function sumaEurosInvertidos() {
           return moneda 
       })
       
-        console.log(saldosCryptoUnicas)
       
-  
-    
-    var saldosCryptoIguales = []
-    
+    saldosCryptoIguales = []
     sumaCantidadesTo.filter((t) => {
         sumaCantidadesFrom.filter((f) => {
             if(t.moneda === f.moneda){
                 saldo = t.cantidad_resultante - f.cantidad_inicial
                 saldosCryptoIguales.push({moneda:f.moneda, cantidad_resultante: saldo})
             } 
-            //if(t.moneda.value && !f.moneda.value){
-                //saldo = t.cantidad_resultante 
-                //saldosCryptoIguales.push({moneda:t.moneda, cantidad: saldo})
 
-            //}
             var eliminarEur = {moneda: "EUR", cantidad_resultante: 0}
             saldosCryptoIguales = saldosCryptoIguales.filter((item)=>{
                 return item.moneda != eliminarEur.moneda && item.cantidad_resultante != eliminarEur.cantidad_resultante
-                })
-
-            console.log(saldosCryptoIguales)
-            
-        })
-
-        
-        saldosCrypto = saldosCryptoIguales.concat(saldosCryptoUnicas)
-        listaSaldos()   
-        console.log(saldosCrypto)
-
+            })
 
         })
+
+    })
    
-    
-    }
+        saldosCrypto = saldosCryptoIguales.concat(saldosCryptoUnicas)
 
+        for(let i=0; i<saldosCrypto.length; i++){
+
+            xhr4 = new XMLHttpRequest()
+            xhr4.onload = listaSaldos
+            xhr4.open("GET", `http://localhost:5000/api/v1/par/${saldosCrypto[i].moneda}/EUR/${saldosCrypto[i].cantidad_resultante}`, true)
+            xhr4.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+            xhr4.send()
+        }
+        
+        //listaSaldos()
+    }
+    
 }
 
+var saldosCryptoFinal = []
 function listaSaldos() {
-    /*if (this.readyState === 4 && this.status === 200) {   
-        const respuesta = JSON.parse(this.responseText) 
-        
-        
-        if (respuesta.status !== "success") {
-            alert("Se ha producido un error en la consulta de saldos")
+    
+    if (this.readyState === 4 && this.status === 200 || this.status === 201) {
+        const conversion = JSON.parse(this.responseText)
+
+        if (conversion.Response === 'False') {
+            alert("Se ha producido un error en la llamada" + respuesta.mensaje)
             return
         }
     
-    const movimientos = respuesta.movimientos_crypto
+    valor_saldo_en_euros = conversion.data.quote["EUR"].price
+    saldosCryptoFinal.push({moneda:conversion.data.symbol, saldo: conversion.data.amount, valor_saldo: valor_saldo_en_euros})
+    saldosCryptoFinal 
 
-    var localSaldosCrypto = saldosCrypto
+    } 
     
-    for (var i=0; i < localSaldosCrypto.length; i++) { 
+    //saldosCryptoFinal
+    //listaSaldos()
+    console.log(saldosCryptoFinal)
+    
+    
+    for (let i=0; i < saldosCryptoFinal.length; i++) { 
+        const movimiento = saldosCryptoFinal[i] 
         
-        const myList = document.createElement('ul')
-        var moneda = localSaldosCrypto[i].moneda
-        var saldo = localSaldosCrypto[i].cantidad_resultante
-        
-        for (var x = 0; x < moneda.length; x++) {
-            const listItem = document.createElement('li')
-            listItem.textContent = moneda[x]
-            myList.appendChild(listItem)
-        }
-            
-        
-        for (var y = 0; y < saldo.length; y++) {
-            const listItem = document.createElement('li')
-            listItem.textContent = saldo[y]
-            myList.appendChild(listItem)
-            }
-            
+        const fila = document.createElement("tr")
+
+        const datos = `
+            <td>${movimiento.moneda}</td>
+            <td>${movimiento.saldo.toFixed(11)}</td>
+            <td>${movimiento.valor_saldo.toFixed(2)}</td>
+        `
+        fila.innerHTML = datos 
+        const tbody = document.querySelector("#tabla-saldos tbody") 
+        tbody.appendChild(fila) 
     }
-        
-        console.log(moneda)
-        console.log(saldo)*/
-
-    
-    var localSaldosCrypto = saldosCrypto
-    
-    var lista = document.getElementById("ulListado") 
-    
-    localSaldosCrypto.forEach(function(data, index){
-
-    var linea = document.createElement("tr")    
-    var contenido = document.createTextNode(data.moneda + '  ' + data.cantidad_resultante)
-    lista.appendChild(linea)
-    linea.appendChild(contenido)
-    
-     })  
-
+  
 }
+    
+
+/*function listaSaldos(){
+
+    for (let i=0; i < saldosCryptoFinal.length; i++) { 
+        const movimiento = saldosCryptoFinal[i] 
+        
+        const fila = document.createElement("tr")
 
 
+        const datos = `
+            <td>${movimiento.moneda}</td>
+            <td>${movimiento.saldo.toFixed(12)}</td>
+            <td>${movimiento.valor_saldo.toFixed(2)}</td>
+        `
+        fila.innerHTML = datos 
+        const tbody = document.querySelector(".tabla tbody") 
+        tbody.appendChild(fila) 
+    }
 
+
+}*/
 
 
 
@@ -536,13 +455,11 @@ function valorCantidadesToEnEuros(){
     if (this.readyState === 4 && this.status === 200 || this.status === 201) {
         const conversion = JSON.parse(this.responseText)
     
-
         if (conversion.Response === 'False') {
             alert("Se ha producido un error en la llamada" + respuesta.mensaje)
             return
         }
 
-    
             cantidad_to_euros = conversion.data.quote["EUR"].price
             valorEurTo.push(cantidad_to_euros)
            
@@ -554,8 +471,6 @@ function valorCantidadesToEnEuros(){
     sumavalorEurTo += valor
     })
     sumaToFrom()
-
-
 
 }    
 
@@ -587,22 +502,24 @@ function actualizaStatus(){
     xhr3.onload = sumaEurosInvertidos
     xhr3.open('GET', `http://localhost:5000/api/v1/movimientos`, true) 
     xhr3.send()
-
-
 }
+
 
 function sumaToFrom(){
     var localCryptoFrom = sumavalorEurFrom
     var localCryptoTo = sumavalorEurTo
     var localSaldoEur = saldo_euros
     var localEurosInvertidos = total_invertido_euros
+    
     valorCryptos = localCryptoTo - localCryptoFrom
     valorActual = localEurosInvertidos + localSaldoEur + valorCryptos
     document.getElementById('valor_actual').value=valorActual.toFixed(2)
 
-
     beneficioObtenido = valorActual - localEurosInvertidos
     document.getElementById('beneficio_obtenido').value=beneficioObtenido.toFixed(2)
+    if(beneficioObtenido.value < 0){
+        value.style.color = "red"
+    }
 
 }
 
@@ -617,16 +534,14 @@ window.onload = function() {
 
     sumaEurosInvertidos()
 
-
     document.querySelector("#convertir")
         .addEventListener("click", llamaApiPrecios)
     
-
     document.querySelector("#comprar")
         .addEventListener("click", grabaCompra)
 
-
     document.querySelector("#actualizar")
         .addEventListener("click", actualizaStatus)
+
 
 }

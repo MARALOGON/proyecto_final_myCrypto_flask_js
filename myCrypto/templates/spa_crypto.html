@@ -6,9 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Crypto Invest App</title>
     <link rel="stylesheet" href="/static/css/bulma.css"><!-- esta linea enlaza a la carpeta static/css para que el navegador muestre los resultados con estilos y no solo un json-->
+    <link rel="stylesheet" href="/static/css/styles.css">
     <script src="/static/js/spa_crypto.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> <!-- Esta linea sirve para que el navegador enlace al archivo spa.js que es donde se va a crear el template que va a mostrar la pagina-->
+    
 </head>
+
   
 <body>
 
@@ -33,9 +36,9 @@
             <div class="container">
                 <div class="columns">
                     <div class="column is-7.5">
-                        <h3 class="title is-3">Registro de movimientos</h3>
+                        <h3 class="box title is-3">Registro de movimientos</h3>
                             <div class="table-container" style="width:850px; height:500px; overflow: scroll">
-                                <table class="table is-striped is-hoverable is-primary" name="tabla-movimientos" id="tabla-movimientos">
+                                <table class="table is-primary" name="tabla-movimientos" id="tabla-movimientos">
                                     <thead class="has-backgorund-info">
                                         <tr is-selected>
                                             <th>fecha</th>
@@ -71,35 +74,23 @@
                     <br/>
                         <div class="container">
                             <div class="row"> 
-                            <h3 class="title is-3">Saldos actuales</h3>
-                                <div class="table-container">
-                                    <table class="table is-striped is-hoverable is-primary" id="ulListado">
-                        
-                            <!--<table class="table-saldos is-striped is-hoverable is-primary" name="tabla-saldos" id="tabla-saldos">
-                                <thead class="has-backgorund-info">
-                                    <tr is-selected>
-                                        <th>moneda</th>
-                                        <th>saldo</th>
-                                        <th>valor_en_euros</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                            <p class="subtitle is-6">Bitcoin(BTC)</p>
-                                <figure class="image is-24x24">
-                                    <img class="is-rounded" src="/static/png/bitcoin-btc-logo.png">
-                                </figure>
-                                
-                            <div class="icon-text">
-                                
-                                    <figure class="is-rounded" src="/static/png/bitcoin-btc-logo.png"></figure>
-                                
-                                <span>Bitcoin(BTC)</span>
-                            </div>-->
+                            <h3 class=" title is-3">Saldos actuales</h3>
+                            <div class="table-container" style="width:400px; height:200px; overflow: scroll">
+                                <table class="table is-primary" name="tabla-saldos" id="tabla-saldos">
+                                    <thead class="has-backgorund-info">
+                                        <tr is-selected>
+                                            <th font-weight="bold">moneda</th>
+                                            <th align="center">saldo</th>
+                                            <th align="right">valor en €</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody> 
+                                </table>
+                            </div>
                             
-                                </div>   
-                                </table>   
-                        
+                            
+                                
                             </div>
                         </div>
                     </div>
@@ -114,7 +105,7 @@
     <section class="section" id="secundaria"> 
     <div class="detail-movimiento container">
         <h3 class="title is-3">Compra y convierte tus criptomonedas</h3>
-        <form class="box has-background-white-bis" name="form" id="form">
+        <form class="box has-background-warning-light" name="form" id="form">
             <div class="row">
                 <input type="hidden" id="idMovimiento">
                 <input type="hidden" id="cantidad_inicial_oculta">
