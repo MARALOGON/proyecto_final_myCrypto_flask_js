@@ -138,6 +138,12 @@ function validarCompra() {
         document.getElementById("cantidad_inicial").focus()
         return false
         }
+
+        if(moneda_from != localsaldosCryptoFinal[i].moneda){
+        swal("Error", "No puedes vender monedas de las cuales no tienes saldo", "error")
+        document.getElementById("cantidad_inicial").focus()
+        return false
+        }
     }
 
     if (cantidad_inicial != cantidad_inicial_oculta) {
@@ -389,6 +395,7 @@ function sumaEurosInvertidos() {
     
 }
 
+//var saldosCryptoProvisional = []
 var saldosCryptoFinal = []
 function listaSaldos() {
     
@@ -407,13 +414,17 @@ function listaSaldos() {
     
     valor_saldo_en_euros = conversion.data.quote["EUR"].price
     saldosCryptoFinal.push({moneda:conversion.data.symbol, saldo: conversion.data.amount, valor_saldo: valor_saldo_en_euros})
-    saldosCryptoFinal 
+    //saldosCryptoFinal 
 
     } 
     
+    /*saldosCryptoProvisional
+    saldosCryptoFinal.forEach (function(saldos){
+    saldosCryptoProvisional.push(saldos)
+    })
     //saldosCryptoFinal
     //listaSaldos()
-    console.log(saldosCryptoFinal)
+    console.log(saldosCryptoFinal)*/
     
     
     for (let i=0; i < saldosCryptoFinal.length; i++) { 
