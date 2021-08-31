@@ -9,9 +9,9 @@ from datetime import datetime
 
 
 
+DBPATH = app.config.get("DATABASE")
 
-
-dbManager = DBmanager(app.config.get('DATABASE'))
+dbManager = DBmanager(DBPATH)
 
 
 
@@ -70,8 +70,8 @@ def muestraMovimientoId(id=None):
                 return jsonify({"status": "fail", "mensaje": "Debes introducir un importe numérico positivo para convertir"})
             elif datos['cantidad_inicial'] == "":
                 return jsonify({"status": "fail", "mensaje": "Debes introducir un importe numérico positivo para convertir"})
-            elif datos['cantidad_inicial'] > "1000000000000":
-                return jsonify({"status": "fail", "mensaje": "Debes introducir un importe menor de 1000000000000 para convertir"})
+            #elif datos['cantidad_inicial'] > "1000000000000":
+                #return jsonify({"status": "fail", "mensaje": "Debes introducir un importe menor de 1000000000000 para convertir"})
 
 
             #Aqui hay que validar lo siguiente:
@@ -97,6 +97,6 @@ def muestraMovimientoId(id=None):
 @app.route('/api/v1/par/<_from>/<_to>/<quantity>')
 @app.route('/api/v1/par/<_from>/<_to>')
 def par(_from, _to, quantity = 1.0):
-    url = f"https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount={quantity}&symbol={_from}&convert={_to}&CMC_PRO_API_KEY=3f3a7477-49a2-498a-8601-49481c24454d"
+    url = f"https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount={quantity}&symbol={_from}&convert={_to}&CMC_PRO_API_KEY=77b090c5-07f3-4917-8927-ad9c5262a189"
     res = requests.get(url)
     return Response(res)

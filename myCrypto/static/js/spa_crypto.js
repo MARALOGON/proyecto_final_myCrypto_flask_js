@@ -210,6 +210,11 @@ function RecibeApiConversion() {
             alert("Se ha producido un error en la llamada" + respuesta.mensaje)
             return
         }
+
+        if (conversion.status.error_code === 1001) {
+            swal("Error", "La API key introducida no es válida", "error") 
+            return
+        }
    
         const llamada = {}
         llamada.moneda_to = document.querySelector("#moneda_to").value
@@ -220,6 +225,7 @@ function RecibeApiConversion() {
         }
         
     }
+   
 
 }
 
@@ -393,6 +399,11 @@ function listaSaldos() {
             alert("Se ha producido un error en la llamada" + respuesta.mensaje)
             return
         }
+
+        if (conversion.status.error_code === 1001) {
+            swal("Error", "La API key introducida no es válida", "error") 
+            return
+        }
     
     valor_saldo_en_euros = conversion.data.quote["EUR"].price
     saldosCryptoFinal.push({moneda:conversion.data.symbol, saldo: conversion.data.amount, valor_saldo: valor_saldo_en_euros})
@@ -412,7 +423,7 @@ function listaSaldos() {
 
         const datos = `
             <td>${movimiento.moneda}</td>
-            <td>${movimiento.saldo.toFixed(11)}</td>
+            <td>${movimiento.saldo.toFixed(16)}</td>
             <td>${movimiento.valor_saldo.toFixed(2)}</td>
         `
         fila.innerHTML = datos 
@@ -460,9 +471,14 @@ function valorCantidadesToEnEuros(){
             return
         }
 
+        if (conversion.status.error_code === 1001) {
+            swal("Error", "La API key introducida no es válida", "error") 
+            return
+        }
+
             cantidad_to_euros = conversion.data.quote["EUR"].price
             valorEurTo.push(cantidad_to_euros)
-           
+        
     } 
         
     
@@ -484,9 +500,15 @@ function valorCantidadesFromEnEuros(){
             alert("Se ha producido un error en la llamada" + respuesta.mensaje)
             return
         }
+
+        if (conversion.status.error_code === 1001) {
+            swal("Error", "La API key introducida no es válida", "error") 
+            return
+        }
+
         cantidad_from_euros = conversion.data.quote["EUR"].price
         valorEurFrom.push(cantidad_from_euros) 
-    }    
+    }  
            
     sumavalorEurFrom = 0 
     valorEurFrom.forEach (function(valor){
@@ -525,8 +547,6 @@ function sumaToFrom(){
 
 window.onload = function() { 
     llamaApiMovimientos() 
-
-    //llamaApiSaldos()
 
     actualizaStatus()
 
