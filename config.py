@@ -2,3 +2,4 @@ DATABASE='data/movimientos_crypto.db' #Creo esta ruta asignada a la variable DAT
 
 
 
+
