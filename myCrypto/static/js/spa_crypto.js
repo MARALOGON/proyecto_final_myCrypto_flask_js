@@ -106,17 +106,6 @@ function validarConversion() {
 }
 
 
-/*function submitCheck() {
-    
-    var cantidad_inicial = document.getElementById("cantidad_inicial").value;
-    var cantidad_resultante = document.getElementById("cantidad_resultante").value
-    
-    if (cantidad_inicial && cantidad_resultante) {
- 
-        comprar.disabled = false;              
-        comprar.removeAttribute("disabled");  
-      } 
-  }*/
 
 
 function validarCompra() {
@@ -395,7 +384,7 @@ function sumaEurosInvertidos() {
     
 }
 
-//var saldosCryptoProvisional = []
+
 var saldosCryptoFinal = []
 function listaSaldos() {
     
@@ -418,13 +407,7 @@ function listaSaldos() {
 
     } 
     
-    /*saldosCryptoProvisional
-    saldosCryptoFinal.forEach (function(saldos){
-    saldosCryptoProvisional.push(saldos)
-    })
-    //saldosCryptoFinal
-    //listaSaldos()
-    console.log(saldosCryptoFinal)*/
+    
     
     
     for (let i=0; i < saldosCryptoFinal.length; i++) { 
@@ -444,27 +427,6 @@ function listaSaldos() {
   
 }
     
-
-/*function listaSaldos(){
-
-    for (let i=0; i < saldosCryptoFinal.length; i++) { 
-        const movimiento = saldosCryptoFinal[i] 
-        
-        const fila = document.createElement("tr")
-
-
-        const datos = `
-            <td>${movimiento.moneda}</td>
-            <td>${movimiento.saldo.toFixed(12)}</td>
-            <td>${movimiento.valor_saldo.toFixed(2)}</td>
-        `
-        fila.innerHTML = datos 
-        const tbody = document.querySelector(".tabla tbody") 
-        tbody.appendChild(fila) 
-    }
-
-
-}*/
 
 
 
